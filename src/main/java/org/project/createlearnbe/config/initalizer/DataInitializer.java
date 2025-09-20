@@ -19,7 +19,7 @@ public class DataInitializer {
             String adminEmail = "root@system.com";
             String adminUsername = "root";
 
-            Optional<Account> existingAdmin = accountRepository.findByUsername(adminEmail);
+            Optional<Account> existingAdmin = accountRepository.findByUsername(adminUsername);
 
             if (existingAdmin.isEmpty()) {
                 Account admin = new Account();

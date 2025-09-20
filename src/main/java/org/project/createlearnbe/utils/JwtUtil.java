@@ -57,7 +57,6 @@ public class JwtUtil {
 
     public boolean validateAccessToken(String token) {
         try {
-
             Jwts.parserBuilder().setSigningKey(getAccessKey()).build().parseClaimsJws(token);
             return true;
         } catch (JwtException e) {
