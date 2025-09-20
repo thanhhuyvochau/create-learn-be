@@ -3,6 +3,7 @@ package org.project.createlearnbe.controllers;
 import org.project.createlearnbe.config.http.ApiResponse;
 import org.project.createlearnbe.dto.request.AuthRequest;
 import org.project.createlearnbe.dto.request.RegisterRequest;
+import org.project.createlearnbe.dto.response.AccountResponse;
 import org.project.createlearnbe.entities.Account;
 import org.project.createlearnbe.serivce.AccountService;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Account>> login(@RequestBody RegisterRequest request) {
+    public ResponseEntity<ApiResponse<AccountResponse>> login(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(ApiResponse.success(
                 accountService.register(request)
         ));

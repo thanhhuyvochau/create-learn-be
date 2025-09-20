@@ -2,7 +2,9 @@ package org.project.createlearnbe.serivce;
 
 import org.project.createlearnbe.constant.Role;
 import org.project.createlearnbe.dto.request.RegisterRequest;
+import org.project.createlearnbe.dto.response.AccountResponse;
 import org.project.createlearnbe.entities.Account;
+import org.project.createlearnbe.mapper.AccountMapper;
 import org.project.createlearnbe.repositories.AccountRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,10 +13,12 @@ import org.springframework.stereotype.Service;
 public class AccountService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AccountMapper accountMapper;
 
-    public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
+    public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder, AccountMapper accountMapper) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
+        this.accountMapper = accountMapper;
     }
 
     private boolean existsByUsername(String username) {
@@ -29,7 +33,7 @@ public class AccountService {
         return accountRepository.existsByPhone(phone);
     }
 
-    public Account register(RegisterRequest request) {
+    public AccountResponse register(RegisterRequest request) {
         Account account = new Account();
         if (existsByUsername(request.getUsername())) {
             throw new RuntimeException("Username already exists");
@@ -43,7 +47,7 @@ public class AccountService {
             account.setPhone(request.getPhone());
             account.setPassword(passwordEncoder.encode(request.getPassword()));
             account.setRole(Role.ADMIN);
-            return accountRepository.save(account);
+            return accountMapper.toResponse(accountRepository.save(account));
         }
     }
 }
