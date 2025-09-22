@@ -1,14 +1,9 @@
 package org.project.createlearnbe.config.initalizer;
 
 import org.project.createlearnbe.constant.Role;
-import org.project.createlearnbe.entities.Account;
-import org.project.createlearnbe.entities.Consultation;
-import org.project.createlearnbe.entities.Grade;
-import org.project.createlearnbe.entities.Subject;
-import org.project.createlearnbe.repositories.AccountRepository;
-import org.project.createlearnbe.repositories.ConsultationRepository;
-import org.project.createlearnbe.repositories.GradeRepository;
-import org.project.createlearnbe.repositories.SubjectRepository;
+import org.project.createlearnbe.constant.Gender;
+import org.project.createlearnbe.entities.*;
+import org.project.createlearnbe.repositories.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,12 +20,14 @@ public class DataInitializer {
                                SubjectRepository subjectRepository,
                                GradeRepository gradeRepository,
                                ConsultationRepository consultationRepository,
+                               TeacherRepository teacherRepository,
                                PasswordEncoder passwordEncoder) {
         return args -> {
             initAdmin(accountRepository, passwordEncoder);
             initSubjects(subjectRepository);
             initGrades(gradeRepository);
             initConsultations(consultationRepository);
+            initTeachers(teacherRepository);
         };
     }
 
@@ -108,10 +105,10 @@ public class DataInitializer {
     private void initConsultations(ConsultationRepository consultationRepository) {
         if (consultationRepository.count() == 0) {
             List<Consultation> consultations = List.of(
-                    createConsultation("Alice Johnson", "1234567890", "alice@example.com", "I would like to know more about your tutoring services."),
-                    createConsultation("Bob Smith", "0987654321", "bob@example.com", "I would like to know more about your tutoring services."),
-                    createConsultation("Charlie Brown", "1122334455", "charlie@example.com", "I would like to know more about your tutoring services."),
-                    createConsultation("Diana Prince", "2233445566", "diana@example.com", "I would like to know more about your tutoring services.")
+                    createConsultation("Alice Johnson", "1234567890", "alice@example.com"),
+                    createConsultation("Bob Smith", "0987654321", "bob@example.com"),
+                    createConsultation("Charlie Brown", "1122334455", "charlie@example.com"),
+                    createConsultation("Diana Prince", "2233445566", "diana@example.com")
             );
 
             consultationRepository.saveAll(consultations);
@@ -121,12 +118,37 @@ public class DataInitializer {
         }
     }
 
-    private Consultation createConsultation(String customerName, String phone, String email, String content) {
+    private Consultation createConsultation(String customerName, String phone, String email) {
         Consultation consultation = new Consultation();
         consultation.setCustomerName(customerName);
         consultation.setPhoneNumber(phone);
         consultation.setEmail(email);
-        consultation.getContent();
         return consultation;
+    }
+
+    private void initTeachers(TeacherRepository teacherRepository) {
+        if (teacherRepository.count() == 1) {
+            List<Teacher> teachers = List.of(
+                    createTeacher("John", "Doe", "Experienced math teacher with 10+ years of teaching high school students.", Gender.MALE, "https://example.com/images/john.png"),
+                    createTeacher("Jane", "Smith", "Physics teacher passionate about experiments and real-world applications.", Gender.FEMALE, "https://example.com/images/jane.png"),
+                    createTeacher("Michael", "Brown", "Chemistry teacher specializing in organic and inorganic chemistry.", Gender.MALE, "https://example.com/images/michael.png"),
+                    createTeacher("Emily", "Davis", "Biology teacher focused on genetics and environmental sciences.", Gender.FEMALE, "https://example.com/images/emily.png")
+            );
+
+            teacherRepository.saveAll(teachers);
+            System.out.println("Inserted default teachers into database.");
+        } else {
+            System.out.println("Teachers already initialized, skipping.");
+        }
+    }
+
+    private Teacher createTeacher(String firstName, String lastName, String introduction, Gender gender, String profileImageUrl) {
+        Teacher teacher = new Teacher();
+        teacher.setFirstName(firstName);
+        teacher.setLastName(lastName);
+        teacher.setIntroduction(introduction);
+        teacher.setGender(gender);
+        teacher.setProfileImageUrl(profileImageUrl);
+        return teacher;
     }
 }
