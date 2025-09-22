@@ -2,9 +2,11 @@ package org.project.createlearnbe.config.initalizer;
 
 import org.project.createlearnbe.constant.Role;
 import org.project.createlearnbe.entities.Account;
+import org.project.createlearnbe.entities.Consultation;
 import org.project.createlearnbe.entities.Grade;
 import org.project.createlearnbe.entities.Subject;
 import org.project.createlearnbe.repositories.AccountRepository;
+import org.project.createlearnbe.repositories.ConsultationRepository;
 import org.project.createlearnbe.repositories.GradeRepository;
 import org.project.createlearnbe.repositories.SubjectRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -22,11 +24,13 @@ public class DataInitializer {
     CommandLineRunner initData(AccountRepository accountRepository,
                                SubjectRepository subjectRepository,
                                GradeRepository gradeRepository,
+                               ConsultationRepository consultationRepository,
                                PasswordEncoder passwordEncoder) {
         return args -> {
             initAdmin(accountRepository, passwordEncoder);
             initSubjects(subjectRepository);
             initGrades(gradeRepository);
+            initConsultations(consultationRepository);
         };
     }
 
@@ -99,5 +103,30 @@ public class DataInitializer {
         grade.setDescription(description);
         grade.setIconUrl(iconUrl);
         return grade;
+    }
+
+    private void initConsultations(ConsultationRepository consultationRepository) {
+        if (consultationRepository.count() == 0) {
+            List<Consultation> consultations = List.of(
+                    createConsultation("Alice Johnson", "1234567890", "alice@example.com", "I would like to know more about your tutoring services."),
+                    createConsultation("Bob Smith", "0987654321", "bob@example.com", "I would like to know more about your tutoring services."),
+                    createConsultation("Charlie Brown", "1122334455", "charlie@example.com", "I would like to know more about your tutoring services."),
+                    createConsultation("Diana Prince", "2233445566", "diana@example.com", "I would like to know more about your tutoring services.")
+            );
+
+            consultationRepository.saveAll(consultations);
+            System.out.println("Inserted default consultations into database.");
+        } else {
+            System.out.println("Consultations already initialized, skipping.");
+        }
+    }
+
+    private Consultation createConsultation(String customerName, String phone, String email, String content) {
+        Consultation consultation = new Consultation();
+        consultation.setCustomerName(customerName);
+        consultation.setPhoneNumber(phone);
+        consultation.setEmail(email);
+        consultation.getContent();
+        return consultation;
     }
 }

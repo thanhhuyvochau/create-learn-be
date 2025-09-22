@@ -31,7 +31,8 @@ public class SecurityConfig {
             new PermitRule(ALL, "/swagger-ui/**"),
             new PermitRule(HttpMethod.GET, "/api/teachers/**"),   // only GET allowed
             new PermitRule(HttpMethod.GET, "/api/subjects/**"), // only GET allowed,
-            new PermitRule(HttpMethod.GET, "/api/grades/**")    // only GET allowed
+            new PermitRule(HttpMethod.GET, "/api/grades/**"),  // only GET allowed
+            new PermitRule(HttpMethod.POST, "/api/consultations/**")    // only GET allowed
 
     );
 
