@@ -15,6 +15,8 @@ public record TeacherRequestDto(
         String introduction,
 
         @NotNull(message = "Gender is required")
-        Gender gender
+        Gender gender,
+
+        String profileImageUrl
 ) {
 }

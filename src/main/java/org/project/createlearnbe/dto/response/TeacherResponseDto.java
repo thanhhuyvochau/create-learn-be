@@ -7,5 +7,7 @@ public record TeacherResponseDto(
         String firstName,
         String lastName,
         String introduction, // sanitized before returning
-        Gender gender
-) {}
+        Gender gender,
+        String profileImageUrl
+) {
+}

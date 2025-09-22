@@ -25,4 +25,7 @@ public class Teacher {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 10)
     private Gender gender;
+
+    @Column(length = 500)
+    private String profileImageUrl;
 }
