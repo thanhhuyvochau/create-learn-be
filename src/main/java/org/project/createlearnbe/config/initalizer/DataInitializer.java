@@ -15,140 +15,237 @@ import java.util.Optional;
 @Configuration
 public class DataInitializer {
 
-    @Bean
-    CommandLineRunner initData(AccountRepository accountRepository,
-                               SubjectRepository subjectRepository,
-                               GradeRepository gradeRepository,
-                               ConsultationRepository consultationRepository,
-                               TeacherRepository teacherRepository,
-                               PasswordEncoder passwordEncoder) {
-        return args -> {
-            initAdmin(accountRepository, passwordEncoder);
-            initSubjects(subjectRepository);
-            initGrades(gradeRepository);
-            initConsultations(consultationRepository);
-            initTeachers(teacherRepository);
-        };
+  @Bean
+  CommandLineRunner initData(
+      AccountRepository accountRepository,
+      SubjectRepository subjectRepository,
+      GradeRepository gradeRepository,
+      ConsultationRepository consultationRepository,
+      TeacherRepository teacherRepository,
+      NewsRepository newsRepository,
+      PasswordEncoder passwordEncoder) {
+    return args -> {
+      initAdmin(accountRepository, passwordEncoder);
+      initSubjects(subjectRepository);
+      initGrades(gradeRepository);
+      initConsultations(consultationRepository);
+      initTeachers(teacherRepository);
+      initNews(newsRepository);
+    };
+  }
+
+  private void initAdmin(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
+    String adminEmail = "root@system.com";
+    String adminUsername = "root";
+
+    Optional<Account> existingAdmin = accountRepository.findByUsername(adminUsername);
+
+    if (existingAdmin.isEmpty()) {
+      Account admin = new Account();
+      admin.setEmail(adminEmail);
+      admin.setUsername(adminUsername);
+      admin.setPassword(passwordEncoder.encode("admin123")); // default password
+      admin.setRole(Role.ADMIN);
+      admin.setPhone("0000000000");
+
+      accountRepository.save(admin);
+      System.out.println("Root admin account created: " + adminUsername);
+    } else {
+      System.out.println("Root admin already exists: " + adminUsername);
     }
+  }
 
-    private void initAdmin(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
-        String adminEmail = "root@system.com";
-        String adminUsername = "root";
+  private void initSubjects(SubjectRepository subjectRepository) {
+    if (subjectRepository.count() == 0) {
+      List<Subject> subjects =
+          List.of(
+              createSubject(
+                  "Mathematics",
+                  "Fundamental subject covering algebra, geometry, and calculus.",
+                  "https://example.com/icons/math.png"),
+              createSubject(
+                  "Physics",
+                  "Study of matter, motion, energy, and the forces of nature.",
+                  "https://example.com/icons/physics.png"),
+              createSubject(
+                  "Chemistry",
+                  "Science of substances, their reactions, and properties.",
+                  "https://example.com/icons/chemistry.png"),
+              createSubject(
+                  "Biology",
+                  "Study of living organisms, their structure, and life processes.",
+                  "https://example.com/icons/biology.png"),
+              createSubject(
+                  "Computer Science",
+                  "Covers programming, algorithms, databases, and software design.",
+                  "https://example.com/icons/compsci.png"));
 
-        Optional<Account> existingAdmin = accountRepository.findByUsername(adminUsername);
-
-        if (existingAdmin.isEmpty()) {
-            Account admin = new Account();
-            admin.setEmail(adminEmail);
-            admin.setUsername(adminUsername);
-            admin.setPassword(passwordEncoder.encode("admin123")); // default password
-            admin.setRole(Role.ADMIN);
-            admin.setPhone("0000000000");
-
-            accountRepository.save(admin);
-            System.out.println("Root admin account created: " + adminUsername);
-        } else {
-            System.out.println("Root admin already exists: " + adminUsername);
-        }
+      subjectRepository.saveAll(subjects);
+      System.out.println("Inserted default subjects into database.");
+    } else {
+      System.out.println("Subjects already initialized, skipping.");
     }
+  }
 
-    private void initSubjects(SubjectRepository subjectRepository) {
-        if (subjectRepository.count() == 0) {
-            List<Subject> subjects = List.of(
-                    createSubject("Mathematics", "Fundamental subject covering algebra, geometry, and calculus.", "https://example.com/icons/math.png"),
-                    createSubject("Physics", "Study of matter, motion, energy, and the forces of nature.", "https://example.com/icons/physics.png"),
-                    createSubject("Chemistry", "Science of substances, their reactions, and properties.", "https://example.com/icons/chemistry.png"),
-                    createSubject("Biology", "Study of living organisms, their structure, and life processes.", "https://example.com/icons/biology.png"),
-                    createSubject("Computer Science", "Covers programming, algorithms, databases, and software design.", "https://example.com/icons/compsci.png")
-            );
+  private Subject createSubject(String name, String description, String iconUrl) {
+    Subject subject = new Subject();
+    subject.setName(name);
+    subject.setDescription(description);
+    subject.setIconUrl(iconUrl);
+    return subject;
+  }
 
-            subjectRepository.saveAll(subjects);
-            System.out.println("Inserted default subjects into database.");
-        } else {
-            System.out.println("Subjects already initialized, skipping.");
-        }
+  private void initGrades(GradeRepository gradeRepository) {
+    if (gradeRepository.count() == 0) {
+      List<Grade> grades =
+          List.of(
+              createGrade(
+                  "Grade 1",
+                  "Basic introduction to reading, writing, and numbers.",
+                  "https://example.com/icons/grade1.png"),
+              createGrade(
+                  "Grade 2",
+                  "Elementary concepts in math, language, and environment studies.",
+                  "https://example.com/icons/grade2.png"),
+              createGrade(
+                  "Grade 3",
+                  "Building foundation in science, social studies, and mathematics.",
+                  "https://example.com/icons/grade3.png"),
+              createGrade(
+                  "Grade 4",
+                  "Expanding knowledge in history, geography, and applied science.",
+                  "https://example.com/icons/grade4.png"),
+              createGrade(
+                  "Grade 5",
+                  "Preparing for middle school with advanced language and math.",
+                  "https://example.com/icons/grade5.png"));
+
+      gradeRepository.saveAll(grades);
+      System.out.println("Inserted default grades into database.");
+    } else {
+      System.out.println("Grades already initialized, skipping.");
     }
+  }
 
-    private Subject createSubject(String name, String description, String iconUrl) {
-        Subject subject = new Subject();
-        subject.setName(name);
-        subject.setDescription(description);
-        subject.setIconUrl(iconUrl);
-        return subject;
+  private Grade createGrade(String name, String description, String iconUrl) {
+    Grade grade = new Grade();
+    grade.setName(name);
+    grade.setDescription(description);
+    grade.setIconUrl(iconUrl);
+    return grade;
+  }
+
+  private void initConsultations(ConsultationRepository consultationRepository) {
+    if (consultationRepository.count() == 0) {
+      List<Consultation> consultations =
+          List.of(
+              createConsultation("Alice Johnson", "1234567890", "alice@example.com"),
+              createConsultation("Bob Smith", "0987654321", "bob@example.com"),
+              createConsultation("Charlie Brown", "1122334455", "charlie@example.com"),
+              createConsultation("Diana Prince", "2233445566", "diana@example.com"));
+
+      consultationRepository.saveAll(consultations);
+      System.out.println("Inserted default consultations into database.");
+    } else {
+      System.out.println("Consultations already initialized, skipping.");
     }
+  }
 
-    private void initGrades(GradeRepository gradeRepository) {
-        if (gradeRepository.count() == 0) {
-            List<Grade> grades = List.of(
-                    createGrade("Grade 1", "Basic introduction to reading, writing, and numbers.", "https://example.com/icons/grade1.png"),
-                    createGrade("Grade 2", "Elementary concepts in math, language, and environment studies.", "https://example.com/icons/grade2.png"),
-                    createGrade("Grade 3", "Building foundation in science, social studies, and mathematics.", "https://example.com/icons/grade3.png"),
-                    createGrade("Grade 4", "Expanding knowledge in history, geography, and applied science.", "https://example.com/icons/grade4.png"),
-                    createGrade("Grade 5", "Preparing for middle school with advanced language and math.", "https://example.com/icons/grade5.png")
-            );
+  private Consultation createConsultation(String customerName, String phone, String email) {
+    Consultation consultation = new Consultation();
+    consultation.setCustomerName(customerName);
+    consultation.setPhoneNumber(phone);
+    consultation.setEmail(email);
+    return consultation;
+  }
 
-            gradeRepository.saveAll(grades);
-            System.out.println("Inserted default grades into database.");
-        } else {
-            System.out.println("Grades already initialized, skipping.");
-        }
+  private void initTeachers(TeacherRepository teacherRepository) {
+    if (teacherRepository.count() == 1) {
+      List<Teacher> teachers =
+          List.of(
+              createTeacher(
+                  "John",
+                  "Doe",
+                  "Experienced math teacher with 10+ years of teaching high school students.",
+                  Gender.MALE,
+                  "https://example.com/images/john.png"),
+              createTeacher(
+                  "Jane",
+                  "Smith",
+                  "Physics teacher passionate about experiments and real-world applications.",
+                  Gender.FEMALE,
+                  "https://example.com/images/jane.png"),
+              createTeacher(
+                  "Michael",
+                  "Brown",
+                  "Chemistry teacher specializing in organic and inorganic chemistry.",
+                  Gender.MALE,
+                  "https://example.com/images/michael.png"),
+              createTeacher(
+                  "Emily",
+                  "Davis",
+                  "Biology teacher focused on genetics and environmental sciences.",
+                  Gender.FEMALE,
+                  "https://example.com/images/emily.png"));
+
+      teacherRepository.saveAll(teachers);
+      System.out.println("Inserted default teachers into database.");
+    } else {
+      System.out.println("Teachers already initialized, skipping.");
     }
+  }
 
-    private Grade createGrade(String name, String description, String iconUrl) {
-        Grade grade = new Grade();
-        grade.setName(name);
-        grade.setDescription(description);
-        grade.setIconUrl(iconUrl);
-        return grade;
+  private Teacher createTeacher(
+      String firstName,
+      String lastName,
+      String introduction,
+      Gender gender,
+      String profileImageUrl) {
+    Teacher teacher = new Teacher();
+    teacher.setFirstName(firstName);
+    teacher.setLastName(lastName);
+    teacher.setIntroduction(introduction);
+    teacher.setGender(gender);
+    teacher.setProfileImageUrl(profileImageUrl);
+    return teacher;
+  }
+
+  private void initNews(NewsRepository newsRepository) {
+    if (newsRepository.count() == 0) {
+      List<News> newsList =
+          List.of(
+              createNews(
+                  "New Semester Announcement",
+                  "The new semester starts next month.",
+                  "<p>We are excited to announce that the new semester will begin on <b>October 1st</b>. "
+                      + "Please make sure to complete your registrations in time. More updates will follow soon.</p>",
+                  true),
+              createNews(
+                  "Science Fair 2025",
+                  "Annual Science Fair details announced.",
+                  "<h2>Science Fair 2025</h2><p>Our annual science fair will be held on <i>November 15th</i>. "
+                      + "Students are encouraged to participate with innovative projects. Prizes will be awarded for the best exhibits.</p>",
+                  true),
+              createNews(
+                  "Library Renovation",
+                  "Library will be closed for renovation.",
+                  "<p>The school library will be closed for renovation from <b>September 25th to October 10th</b>. "
+                      + "We apologize for the inconvenience and promise an improved learning space once it reopens.</p>",
+                  false));
+
+      newsRepository.saveAll(newsList);
+      System.out.println("Inserted default news into database.");
+    } else {
+      System.out.println("News already initialized, skipping.");
     }
+  }
 
-    private void initConsultations(ConsultationRepository consultationRepository) {
-        if (consultationRepository.count() == 0) {
-            List<Consultation> consultations = List.of(
-                    createConsultation("Alice Johnson", "1234567890", "alice@example.com"),
-                    createConsultation("Bob Smith", "0987654321", "bob@example.com"),
-                    createConsultation("Charlie Brown", "1122334455", "charlie@example.com"),
-                    createConsultation("Diana Prince", "2233445566", "diana@example.com")
-            );
-
-            consultationRepository.saveAll(consultations);
-            System.out.println("Inserted default consultations into database.");
-        } else {
-            System.out.println("Consultations already initialized, skipping.");
-        }
-    }
-
-    private Consultation createConsultation(String customerName, String phone, String email) {
-        Consultation consultation = new Consultation();
-        consultation.setCustomerName(customerName);
-        consultation.setPhoneNumber(phone);
-        consultation.setEmail(email);
-        return consultation;
-    }
-
-    private void initTeachers(TeacherRepository teacherRepository) {
-        if (teacherRepository.count() == 1) {
-            List<Teacher> teachers = List.of(
-                    createTeacher("John", "Doe", "Experienced math teacher with 10+ years of teaching high school students.", Gender.MALE, "https://example.com/images/john.png"),
-                    createTeacher("Jane", "Smith", "Physics teacher passionate about experiments and real-world applications.", Gender.FEMALE, "https://example.com/images/jane.png"),
-                    createTeacher("Michael", "Brown", "Chemistry teacher specializing in organic and inorganic chemistry.", Gender.MALE, "https://example.com/images/michael.png"),
-                    createTeacher("Emily", "Davis", "Biology teacher focused on genetics and environmental sciences.", Gender.FEMALE, "https://example.com/images/emily.png")
-            );
-
-            teacherRepository.saveAll(teachers);
-            System.out.println("Inserted default teachers into database.");
-        } else {
-            System.out.println("Teachers already initialized, skipping.");
-        }
-    }
-
-    private Teacher createTeacher(String firstName, String lastName, String introduction, Gender gender, String profileImageUrl) {
-        Teacher teacher = new Teacher();
-        teacher.setFirstName(firstName);
-        teacher.setLastName(lastName);
-        teacher.setIntroduction(introduction);
-        teacher.setGender(gender);
-        teacher.setProfileImageUrl(profileImageUrl);
-        return teacher;
-    }
+  private News createNews(String title, String brief, String content, Boolean isDisplay) {
+    News news = new News();
+    news.setTitle(title);
+    news.setBrief(brief);
+    news.setContent(content);
+    news.setIsDisplay(isDisplay);
+    return news;
+  }
 }
