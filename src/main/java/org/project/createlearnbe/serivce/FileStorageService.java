@@ -18,26 +18,23 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class FileStorageService {
 
-    private final MinioClient minioClient;
-    private final MinioProperties properties;
+  private final MinioClient minioClient;
+  private final MinioProperties properties;
 
-    public String uploadFile(MultipartFile file) {
-        String objectName = UUID.randomUUID() + "-" + file.getOriginalFilename();
+  public String uploadFile(MultipartFile file) {
+    String objectName = UUID.randomUUID() + "-" + file.getOriginalFilename();
 
-        try (InputStream is = file.getInputStream()) {
-            minioClient.putObject(
-                    PutObjectArgs.builder()
-                            .bucket(properties.getBucket())
-                            .object(objectName)
-                            .stream(is, file.getSize(), -1)
-                            .contentType(file.getContentType())
-                            .build()
-            );
-        } catch (Exception e) {
-            throw new FileStorageException("Error uploading file", e);
-        }
-
-        // Return permanent public URL
-        return properties.getUrl() + "/" + properties.getBucket() + "/" + objectName;
+    try (InputStream is = file.getInputStream()) {
+      minioClient.putObject(
+          PutObjectArgs.builder().bucket(properties.getBucket()).object(objectName).stream(
+                  is, file.getSize(), -1)
+              .contentType(file.getContentType())
+              .build());
+    } catch (Exception e) {
+      throw new FileStorageException("Error uploading file", e);
     }
+
+    // Return permanent public URL
+    return "/" + properties.getBucket() + "/" + objectName;
+  }
 }
