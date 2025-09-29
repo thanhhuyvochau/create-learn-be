@@ -29,12 +29,12 @@ public class SecurityConfig {
           new PermitRule(ALL, "/v3/api-docs/**"),
           new PermitRule(ALL, "/swagger-ui.html"),
           new PermitRule(ALL, "/swagger-ui/**"),
-          new PermitRule(HttpMethod.GET, "/api/teachers/**"), // only GET allowed
-          new PermitRule(HttpMethod.GET, "/api/subjects/**"), // only GET allowed,
-          new PermitRule(HttpMethod.GET, "/api/grades/**"), // only GET allowed
-          new PermitRule(HttpMethod.POST, "/api/consultations/**"), // only GET allowed
-          new PermitRule(HttpMethod.GET, "/api/news/public/**") // only GET allowed
-          );
+          new PermitRule(HttpMethod.GET, "/api/teachers/**"),
+          new PermitRule(HttpMethod.GET, "/api/subjects/**"),
+          new PermitRule(HttpMethod.GET, "/api/grades/**"),
+          new PermitRule(HttpMethod.POST, "/api/consultations/**"),
+          new PermitRule(HttpMethod.GET, "/api/news/public/**"),
+          new PermitRule(HttpMethod.GET, "/api/classes/public/**"));
 
   private final JwtFilter jwtFilter;
 

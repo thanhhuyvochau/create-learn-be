@@ -23,7 +23,8 @@ public class DataInitializer {
       ConsultationRepository consultationRepository,
       TeacherRepository teacherRepository,
       NewsRepository newsRepository,
-      PasswordEncoder passwordEncoder) {
+      PasswordEncoder passwordEncoder,
+      ClazzRepository classRepository) {
     return args -> {
       initAdmin(accountRepository, passwordEncoder);
       initSubjects(subjectRepository);
@@ -31,6 +32,7 @@ public class DataInitializer {
       initConsultations(consultationRepository);
       initTeachers(teacherRepository);
       initNews(newsRepository);
+      initClazzes(classRepository, subjectRepository, gradeRepository, teacherRepository);
     };
   }
 
@@ -44,7 +46,7 @@ public class DataInitializer {
       Account admin = new Account();
       admin.setEmail(adminEmail);
       admin.setUsername(adminUsername);
-      admin.setPassword(passwordEncoder.encode("admin123")); // default password
+      admin.setPassword(passwordEncoder.encode("admin123"));
       admin.setRole(Role.ADMIN);
       admin.setPhone("0000000000");
 
@@ -62,23 +64,23 @@ public class DataInitializer {
               createSubject(
                   "Mathematics",
                   "Fundamental subject covering algebra, geometry, and calculus.",
-                  "https://example.com/icons/math.png"),
+                  "/icons/math.png"),
               createSubject(
                   "Physics",
                   "Study of matter, motion, energy, and the forces of nature.",
-                  "https://example.com/icons/physics.png"),
+                  "/icons/physics.png"),
               createSubject(
                   "Chemistry",
                   "Science of substances, their reactions, and properties.",
-                  "https://example.com/icons/chemistry.png"),
+                  "/icons/chemistry.png"),
               createSubject(
                   "Biology",
                   "Study of living organisms, their structure, and life processes.",
-                  "https://example.com/icons/biology.png"),
+                  "/icons/biology.png"),
               createSubject(
                   "Computer Science",
                   "Covers programming, algorithms, databases, and software design.",
-                  "https://example.com/icons/compsci.png"));
+                  "/icons/compsci.png"));
 
       subjectRepository.saveAll(subjects);
       System.out.println("Inserted default subjects into database.");
@@ -102,23 +104,23 @@ public class DataInitializer {
               createGrade(
                   "Grade 1",
                   "Basic introduction to reading, writing, and numbers.",
-                  "https://example.com/icons/grade1.png"),
+                  "/icons/grade1.png"),
               createGrade(
                   "Grade 2",
                   "Elementary concepts in math, language, and environment studies.",
-                  "https://example.com/icons/grade2.png"),
+                  "/icons/grade2.png"),
               createGrade(
                   "Grade 3",
                   "Building foundation in science, social studies, and mathematics.",
-                  "https://example.com/icons/grade3.png"),
+                  "/icons/grade3.png"),
               createGrade(
                   "Grade 4",
                   "Expanding knowledge in history, geography, and applied science.",
-                  "https://example.com/icons/grade4.png"),
+                  "/icons/grade4.png"),
               createGrade(
                   "Grade 5",
                   "Preparing for middle school with advanced language and math.",
-                  "https://example.com/icons/grade5.png"));
+                  "/icons/grade5.png"));
 
       gradeRepository.saveAll(grades);
       System.out.println("Inserted default grades into database.");
@@ -160,7 +162,7 @@ public class DataInitializer {
   }
 
   private void initTeachers(TeacherRepository teacherRepository) {
-    if (teacherRepository.count() == 1) {
+    if (teacherRepository.count() == 0) {
       List<Teacher> teachers =
           List.of(
               createTeacher(
@@ -168,25 +170,25 @@ public class DataInitializer {
                   "Doe",
                   "Experienced math teacher with 10+ years of teaching high school students.",
                   Gender.MALE,
-                  "https://example.com/images/john.png"),
+                  "/images/john.png"),
               createTeacher(
                   "Jane",
                   "Smith",
                   "Physics teacher passionate about experiments and real-world applications.",
                   Gender.FEMALE,
-                  "https://example.com/images/jane.png"),
+                  "/images/jane.png"),
               createTeacher(
                   "Michael",
                   "Brown",
                   "Chemistry teacher specializing in organic and inorganic chemistry.",
                   Gender.MALE,
-                  "https://example.com/images/michael.png"),
+                  "/images/michael.png"),
               createTeacher(
                   "Emily",
                   "Davis",
                   "Biology teacher focused on genetics and environmental sciences.",
                   Gender.FEMALE,
-                  "https://example.com/images/emily.png"));
+                  "/images/emily.png"));
 
       teacherRepository.saveAll(teachers);
       System.out.println("Inserted default teachers into database.");
@@ -247,5 +249,50 @@ public class DataInitializer {
     news.setContent(content);
     news.setIsDisplay(isDisplay);
     return news;
+  }
+
+  private void initClazzes(
+      ClazzRepository clazzRepository,
+      SubjectRepository subjectRepository,
+      GradeRepository gradeRepository,
+      TeacherRepository teacherRepository) {
+    if (clazzRepository.count() == 0) {
+      // pick existing teacher
+      Teacher teacher = teacherRepository.findAll().stream().findFirst().orElse(null);
+
+      List<Subject> subjects =
+          subjectRepository.findAll().subList(0, Math.min(2, (int) subjectRepository.count()));
+      List<Grade> grades =
+          gradeRepository.findAll().subList(0, Math.min(2, (int) gradeRepository.count()));
+
+      Clazz mathClass = new Clazz();
+      mathClass.setName("Mathematics Excellence");
+      mathClass.setBrief("Advanced problem-solving and algebra focus.");
+      mathClass.setDescription(
+          "This class helps students master mathematics with a focus on algebra, geometry, and calculus.");
+      mathClass.setImage("/images/math-class.png");
+      mathClass.setRequirement("Basic understanding of arithmetic operations.");
+      mathClass.setGuarantee("Students will improve problem-solving skills.");
+      mathClass.setSubjects(subjects);
+      mathClass.setGrades(grades);
+      mathClass.setTeacher(teacher);
+
+      Clazz physicsClass = new Clazz();
+      physicsClass.setName("Physics Exploration");
+      physicsClass.setBrief("Understand the world of motion and forces.");
+      physicsClass.setDescription(
+          "Covers classical mechanics, motion, forces, and introduction to energy.");
+      physicsClass.setImage("/images/physics-class.png");
+      physicsClass.setRequirement("Interest in science and curiosity about natural phenomena.");
+      physicsClass.setGuarantee("Students will build a solid foundation in physics.");
+      physicsClass.setSubjects(subjects);
+      physicsClass.setGrades(grades);
+      physicsClass.setTeacher(teacher);
+
+      clazzRepository.saveAll(List.of(mathClass, physicsClass));
+      System.out.println("Inserted default classes into database.");
+    } else {
+      System.out.println("Classes already initialized, skipping.");
+    }
   }
 }

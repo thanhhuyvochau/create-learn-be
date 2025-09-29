@@ -8,9 +8,9 @@ import org.project.createlearnbe.entities.Grade;
 
 @Mapper(componentModel = "spring")
 public interface GradeMapper {
-    Grade toEntity(GradeRequest request);
+  Grade toEntity(GradeRequest request);
 
-    GradeResponse toResponse(Grade grade);
+  GradeResponse toResponse(Grade grade);
 
-    void updateEntityFromRequest(GradeRequest request, @MappingTarget Grade grade);
+  void updateEntityFromRequest(GradeRequest request, @MappingTarget Grade grade);
 }
