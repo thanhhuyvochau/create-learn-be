@@ -1,6 +1,7 @@
 package org.project.createlearnbe.serivce;
 
 import lombok.RequiredArgsConstructor;
+import org.project.createlearnbe.config.minio.MinioProperties;
 import org.project.createlearnbe.dto.request.ClassRequest;
 import org.project.createlearnbe.dto.response.ClassResponse;
 import org.project.createlearnbe.dto.response.GradeResponse;
@@ -14,6 +15,7 @@ import org.project.createlearnbe.repositories.ClazzRepository;
 import org.project.createlearnbe.repositories.SubjectRepository;
 import org.project.createlearnbe.repositories.GradeRepository;
 import org.project.createlearnbe.repositories.TeacherRepository;
+import org.project.createlearnbe.utils.UrlUtils;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -29,6 +31,7 @@ public class ClazzService {
   private final SubjectRepository subjectRepository;
   private final GradeRepository gradeRepository;
   private final TeacherRepository teacherRepository;
+  private final UrlUtils urlUtils;
 
   public List<ClassResponse> getAll() {
     return clazzRepository.findAll().stream().map(this::toResponse).toList();
@@ -101,7 +104,7 @@ public class ClazzService {
     response.setName(clazz.getName());
     response.setBrief(clazz.getBrief());
     response.setDescription(clazz.getDescription());
-    response.setImage(clazz.getImage());
+    response.setImage(urlUtils.buildAbsolutePath(clazz.getImage()));
     response.setRequirement(clazz.getRequirement());
     response.setGuarantee(clazz.getGuarantee());
     response.setIsDisplayed(clazz.getIsDisplayed());
