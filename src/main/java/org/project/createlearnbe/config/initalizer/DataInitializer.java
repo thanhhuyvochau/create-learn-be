@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -315,7 +316,7 @@ public class DataInitializer {
       mathClass.setSubjects(subjects);
       mathClass.setGrades(grades);
       mathClass.setTeacher(teacher);
-
+      mathClass.setPrice(BigDecimal.valueOf(2000000));
       Clazz physicsClass = new Clazz();
       physicsClass.setName("Physics Exploration");
       physicsClass.setBrief("Understand the world of motion and forces.");
@@ -327,7 +328,7 @@ public class DataInitializer {
       physicsClass.setSubjects(subjects);
       physicsClass.setGrades(grades);
       physicsClass.setTeacher(teacher);
-
+      physicsClass.setPrice(BigDecimal.ZERO);
       clazzRepository.saveAll(List.of(mathClass, physicsClass));
       System.out.println("Inserted default classes into database.");
     } else {

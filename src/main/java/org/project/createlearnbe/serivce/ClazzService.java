@@ -17,6 +17,8 @@ import org.project.createlearnbe.repositories.TeacherRepository;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -70,6 +72,7 @@ public class ClazzService {
     clazz.setRequirement(request.getRequirement());
     clazz.setGuarantee(request.getGuarantee());
     clazz.setIsDisplayed(request.getIsDisplayed());
+    clazz.setPrice(request.getPrice() == null ? BigDecimal.ZERO : request.getPrice());
     if (request.getSubjectIds() != null) {
       List<Subject> subjects = subjectRepository.findAllById(request.getSubjectIds());
       clazz.setSubjects(subjects);
@@ -102,6 +105,7 @@ public class ClazzService {
     response.setRequirement(clazz.getRequirement());
     response.setGuarantee(clazz.getGuarantee());
     response.setIsDisplayed(clazz.getIsDisplayed());
+    response.setPrice(clazz.getPrice());
     response.setSubjects(
         clazz.getSubjects().stream()
             .map(

@@ -3,6 +3,7 @@ package org.project.createlearnbe.entities;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -31,7 +32,7 @@ public class Clazz {
   @JoinTable(
       name = "class_subject",
       joinColumns = @JoinColumn(name = "class_id"),
-      inverseJoinColumns = @JoinColumn(name = "subject_id"))  
+      inverseJoinColumns = @JoinColumn(name = "subject_id"))
   private List<Subject> subjects;
 
   @ManyToMany
@@ -46,4 +47,5 @@ public class Clazz {
   private Teacher teacher;
 
   private Boolean isDisplayed = true;
+  private BigDecimal price = BigDecimal.ZERO;
 }
