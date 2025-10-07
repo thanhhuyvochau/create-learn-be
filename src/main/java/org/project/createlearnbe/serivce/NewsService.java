@@ -6,6 +6,8 @@ import org.project.createlearnbe.dto.response.NewsResponse;
 import org.project.createlearnbe.entities.News;
 import org.project.createlearnbe.mapper.NewsMapper;
 import org.project.createlearnbe.repositories.NewsRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,10 +20,8 @@ public class NewsService {
   private final NewsRepository newsRepository;
   private final NewsMapper newsMapper;
 
-  public List<NewsResponse> getAllNews() {
-    return newsRepository.findAll().stream()
-        .map(newsMapper::toResponse)
-        .collect(Collectors.toList());
+  public Page<NewsResponse> getAllNews(Pageable pageable) {
+    return newsRepository.findAll(pageable).map(newsMapper::toResponse);
   }
 
   public NewsResponse getNewsById(Long id) {
@@ -53,15 +53,13 @@ public class NewsService {
     newsRepository.delete(news);
   }
 
-  public List<NewsResponse> getAllVisibleNews() {
-    return newsRepository.findAllByIsDisplay(true).stream()
-        .map(newsMapper::toResponse)
-        .collect(Collectors.toList());
+  public Page<NewsResponse> getAllVisibleNews(Pageable pageable) {
+    return newsRepository.findAllByIsDisplay(true, pageable)
+        .map(newsMapper::toResponse);
   }
 
   public NewsResponse getVisibleNewsById(Long id) {
-    Optional<News> byIsDisplayAndId = newsRepository
-            .findByIsDisplayAndId(true, id);
+    Optional<News> byIsDisplayAndId = newsRepository.findByIsDisplayAndId(true, id);
     return byIsDisplayAndId
         .map(newsMapper::toResponse)
         .orElseThrow(() -> new RuntimeException("News not found with id: " + id));

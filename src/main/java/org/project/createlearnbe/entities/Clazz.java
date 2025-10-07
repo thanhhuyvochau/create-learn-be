@@ -48,4 +48,5 @@ public class Clazz {
 
   private Boolean isDisplayed = true;
   private BigDecimal price = BigDecimal.ZERO;
+  private Double clickCount = 0.0;
 }

@@ -21,3 +21,4 @@ minio:
 
 app:
   init-mock: true
+  top-class-limit: 7

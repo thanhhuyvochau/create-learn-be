@@ -1,8 +1,12 @@
 package org.project.createlearnbe.serivce;
 
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
+import org.project.createlearnbe.config.AppProperties;
+import org.project.createlearnbe.config.http.ApiPage;
 import org.project.createlearnbe.config.minio.MinioProperties;
 import org.project.createlearnbe.dto.request.ClassRequest;
+import org.project.createlearnbe.dto.request.GetClassRequest;
 import org.project.createlearnbe.dto.response.ClassResponse;
 import org.project.createlearnbe.dto.response.GradeResponse;
 import org.project.createlearnbe.dto.response.SubjectResponse;
@@ -16,6 +20,8 @@ import org.project.createlearnbe.repositories.SubjectRepository;
 import org.project.createlearnbe.repositories.GradeRepository;
 import org.project.createlearnbe.repositories.TeacherRepository;
 import org.project.createlearnbe.utils.UrlUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -32,6 +38,7 @@ public class ClazzService {
   private final GradeRepository gradeRepository;
   private final TeacherRepository teacherRepository;
   private final UrlUtils urlUtils;
+  private final AppProperties appProperties;
 
   public List<ClassResponse> getAll() {
     return clazzRepository.findAll().stream().map(this::toResponse).toList();
@@ -150,8 +157,21 @@ public class ClazzService {
     return response;
   }
 
-  public List<ClassResponse> getAllPublicClass() {
-    return clazzRepository.findAllByIsDisplayed(true).stream().map(this::toResponse).toList();
+  public ApiPage<ClassResponse> getAllPublicClass(GetClassRequest request) {
+    Page<Clazz> classes;
+
+    switch (request.getType() == null ? "" : request.getType().toLowerCase()) {
+      case "free" ->
+          classes =
+              clazzRepository.findAllByIsDisplayedAndPriceEquals(
+                  true, BigDecimal.ZERO, request.getPageable());
+      case "popular" ->
+          classes =
+              clazzRepository.findTopByIsDisplayedOrderByClickCountDesc(
+                  true, request.getPageable());
+      default -> classes = clazzRepository.findAllByIsDisplayed(true, request.getPageable());
+    }
+    return ApiPage.of(classes.map(this::toResponse));
   }
 
   public ClassResponse getPublicClassById(Long id) {
@@ -159,6 +179,8 @@ public class ClazzService {
         clazzRepository
             .findClazzByIsDisplayedAndId(true, id)
             .orElseThrow(() -> new EntityNotFoundException("Class not found with id: " + id));
+    clazz.setClickCount(clazz.getClickCount() + 1);
+    clazzRepository.save(clazz);
     return toResponse(clazz);
   }
 }

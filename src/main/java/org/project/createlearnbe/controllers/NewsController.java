@@ -1,10 +1,12 @@
 package org.project.createlearnbe.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.project.createlearnbe.config.http.ApiPage;
 import org.project.createlearnbe.config.http.ApiResponse;
 import org.project.createlearnbe.dto.request.NewsRequest;
 import org.project.createlearnbe.dto.response.NewsResponse;
 import org.project.createlearnbe.serivce.NewsService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +19,8 @@ public class NewsController {
   private final NewsService newsService;
 
   @GetMapping("/admin")
-  public ResponseEntity<ApiResponse<List<NewsResponse>>> getAllNews() {
-    return ResponseEntity.ok(ApiResponse.success(newsService.getAllNews()));
+  public ResponseEntity<ApiResponse<ApiPage<NewsResponse>>> getAllNews(Pageable pageable) {
+    return ResponseEntity.ok(ApiResponse.success(ApiPage.of(newsService.getAllNews(pageable))));
   }
 
   @GetMapping("/admin/{id}")
@@ -27,8 +29,9 @@ public class NewsController {
   }
 
   @GetMapping("/public")
-  public ResponseEntity<ApiResponse<List<NewsResponse>>> getAllPublicNews() {
-    return ResponseEntity.ok(ApiResponse.success(newsService.getAllVisibleNews()));
+  public ResponseEntity<ApiResponse<ApiPage<NewsResponse>>> getAllPublicNews(Pageable pageable) {
+    return ResponseEntity.ok(
+        ApiResponse.success(ApiPage.of(newsService.getAllVisibleNews(pageable))));
   }
 
   @GetMapping("/public/{id}")

@@ -1,10 +1,13 @@
 package org.project.createlearnbe.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.project.createlearnbe.config.http.ApiPage;
 import org.project.createlearnbe.config.http.ApiResponse;
 import org.project.createlearnbe.dto.request.ClassRequest;
+import org.project.createlearnbe.dto.request.GetClassRequest;
 import org.project.createlearnbe.dto.response.ClassResponse;
 import org.project.createlearnbe.serivce.ClazzService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,8 +48,10 @@ public class ClassController {
   }
 
   @GetMapping("/public")
-  public ResponseEntity<ApiResponse<List<ClassResponse>>> getAllPublicClass() {
-    return ResponseEntity.ok(ApiResponse.success(clazzService.getAllPublicClass()));
+  public ResponseEntity<ApiResponse<ApiPage<ClassResponse>>> getAllPublicClass(
+      @RequestParam(required = false) String type, Pageable pageable) {
+    return ResponseEntity.ok(
+        ApiResponse.success(clazzService.getAllPublicClass(new GetClassRequest(type, pageable))));
   }
 
   @GetMapping("/public/{id}")
