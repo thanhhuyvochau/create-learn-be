@@ -34,7 +34,8 @@ public class SecurityConfig {
           new PermitRule(HttpMethod.GET, "/api/grades/**"),
           new PermitRule(HttpMethod.POST, "/api/consultations/**"),
           new PermitRule(HttpMethod.GET, "/api/news/public/**"),
-          new PermitRule(HttpMethod.GET, "/api/classes/public/**"));
+          new PermitRule(HttpMethod.GET, "/api/classes/public/**"),
+          new PermitRule(HttpMethod.POST, "/api/registrations"));
 
   private final JwtFilter jwtFilter;
 
