@@ -5,15 +5,24 @@ import org.project.createlearnbe.constant.Gender;
 import org.project.createlearnbe.entities.*;
 import org.project.createlearnbe.repositories.*;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 
 @Configuration
 public class DataInitializer {
+  private final AppProperties appProperties;
+
+  public DataInitializer(AppProperties appProperties) {
+    this.appProperties = appProperties;
+  }
 
   @Bean
   CommandLineRunner initData(
@@ -26,13 +35,15 @@ public class DataInitializer {
       PasswordEncoder passwordEncoder,
       ClazzRepository classRepository) {
     return args -> {
-      initAdmin(accountRepository, passwordEncoder);
-      initSubjects(subjectRepository);
-      initGrades(gradeRepository);
-      initConsultations(consultationRepository);
-      initTeachers(teacherRepository);
-      initNews(newsRepository);
-      initClazzes(classRepository, subjectRepository, gradeRepository, teacherRepository);
+      if (appProperties.isInitMock()) {
+        initAdmin(accountRepository, passwordEncoder);
+        initSubjects(subjectRepository);
+        initGrades(gradeRepository);
+        initConsultations(consultationRepository);
+        initTeachers(teacherRepository);
+        initNews(newsRepository);
+        initClazzes(classRepository, subjectRepository, gradeRepository, teacherRepository);
+      }
     };
   }
 
@@ -62,25 +73,53 @@ public class DataInitializer {
       List<Subject> subjects =
           List.of(
               createSubject(
-                  "Mathematics",
-                  "Fundamental subject covering algebra, geometry, and calculus.",
-                  "/icons/math.png"),
+                  "Scratch Coding",
+                  "Learn coding by creating fun games and animations with Scratch.",
+                  "/static/icon/scratch.webp"),
               createSubject(
-                  "Physics",
-                  "Study of matter, motion, energy, and the forces of nature.",
-                  "/icons/physics.png"),
+                  "Artificial Intelligence",
+                  "Explore how AI works through projects and simulations.",
+                  "/static/icon/ai.webp"),
               createSubject(
-                  "Chemistry",
-                  "Science of substances, their reactions, and properties.",
-                  "/icons/chemistry.png"),
+                  "Minecraft Coding",
+                  "Code mods and automate gameplay in Minecraft.",
+                  "/static/icon/minecraft.webp"),
               createSubject(
-                  "Biology",
-                  "Study of living organisms, their structure, and life processes.",
-                  "/icons/biology.png"),
+                  "Python",
+                  "Learn Python through games, math, and automation projects.",
+                  "/static/icon/python.webp"),
               createSubject(
-                  "Computer Science",
-                  "Covers programming, algorithms, databases, and software design.",
-                  "/icons/compsci.png"));
+                  "Roblox Coding",
+                  "Create Roblox games and worlds using Lua.",
+                  "/static/icon/roblox.webp"),
+              createSubject(
+                  "Robotics",
+                  "Build and program robots that move and respond.",
+                  "/static/icon/robotics.webp"),
+              createSubject(
+                  "Mobile Games & Apps",
+                  "Design and build mobile applications.",
+                  "/static/icon/mobile_apps.webp"),
+              createSubject(
+                  "Game Development",
+                  "Create games using professional tools and engines.",
+                  "/static/icon/game_dev.webp"),
+              createSubject(
+                  "Digital Design",
+                  "Master the art of digital creativity and visual storytelling.",
+                  "/static/icon/digital_design.webp"),
+              createSubject(
+                  "AP CS Exams",
+                  "Prepare for AP Computer Science A and Principles exams.",
+                  "/static/icon/java.webp"),
+              createSubject(
+                  "Data Science",
+                  "Learn how to analyze and visualize data with code.",
+                  "/static/icon/data_science.webp"),
+              createSubject(
+                  "Web Development",
+                  "Build modern, responsive websites.",
+                  "/static/icon/web_dev.webp"));
 
       subjectRepository.saveAll(subjects);
       System.out.println("Inserted default subjects into database.");
@@ -93,7 +132,7 @@ public class DataInitializer {
     Subject subject = new Subject();
     subject.setName(name);
     subject.setDescription(description);
-    subject.setIconUrl(iconUrl);
+    subject.setIconBase64(encodeImageToBase64(iconUrl));
     return subject;
   }
 
@@ -104,23 +143,23 @@ public class DataInitializer {
               createGrade(
                   "Grade 1",
                   "Basic introduction to reading, writing, and numbers.",
-                  "/icons/grade1.png"),
+                  "/static/icon/grade1.png"),
               createGrade(
                   "Grade 2",
                   "Elementary concepts in math, language, and environment studies.",
-                  "/icons/grade2.png"),
+                  "/static/icon/grade2.png"),
               createGrade(
                   "Grade 3",
                   "Building foundation in science, social studies, and mathematics.",
-                  "/icons/grade3.png"),
+                  "/static/icon/grade3.png"),
               createGrade(
                   "Grade 4",
                   "Expanding knowledge in history, geography, and applied science.",
-                  "/icons/grade4.png"),
+                  "/static/icon/grade4.png"),
               createGrade(
                   "Grade 5",
                   "Preparing for middle school with advanced language and math.",
-                  "/icons/grade5.png"));
+                  "/static/icon/grade5.png"));
 
       gradeRepository.saveAll(grades);
       System.out.println("Inserted default grades into database.");
@@ -133,7 +172,7 @@ public class DataInitializer {
     Grade grade = new Grade();
     grade.setName(name);
     grade.setDescription(description);
-    grade.setIconUrl(iconUrl);
+    grade.setIconBase64(encodeImageToBase64(iconUrl));
     return grade;
   }
 
@@ -293,6 +332,19 @@ public class DataInitializer {
       System.out.println("Inserted default classes into database.");
     } else {
       System.out.println("Classes already initialized, skipping.");
+    }
+  }
+
+  private String encodeImageToBase64(String resourcePath) {
+    try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
+      if (is == null) {
+        System.err.println("Image not found: " + resourcePath);
+        return null;
+      }
+      byte[] bytes = is.readAllBytes();
+      return Base64.getEncoder().encodeToString(bytes);
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to load image: " + resourcePath, e);
     }
   }
 }

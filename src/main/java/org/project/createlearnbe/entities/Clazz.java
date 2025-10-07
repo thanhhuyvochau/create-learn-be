@@ -31,7 +31,7 @@ public class Clazz {
   @JoinTable(
       name = "class_subject",
       joinColumns = @JoinColumn(name = "class_id"),
-      inverseJoinColumns = @JoinColumn(name = "subject_id"))
+      inverseJoinColumns = @JoinColumn(name = "subject_id"))  
   private List<Subject> subjects;
 
   @ManyToMany

@@ -3,6 +3,7 @@ package org.project.createlearnbe.dto.request;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 public class SubjectRequest {
@@ -13,5 +14,5 @@ public class SubjectRequest {
     @Size(max = 500)
     private String description;
 
-    private String iconUrl;
+    private MultipartFile icon; // uploaded image file
 }

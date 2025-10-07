@@ -17,5 +17,7 @@ public class Grade {
   @Column(length = 500)
   private String description;
 
-  private String iconUrl;
+  @Lob
+  @Column(columnDefinition = "LONGTEXT")
+  private String iconBase64;
 }

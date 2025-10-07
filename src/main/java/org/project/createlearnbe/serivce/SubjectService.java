@@ -1,62 +1,52 @@
 package org.project.createlearnbe.serivce;
 
 import lombok.RequiredArgsConstructor;
-import org.project.createlearnbe.config.exception.types.ResourceNotFoundException;
 import org.project.createlearnbe.dto.request.SubjectRequest;
 import org.project.createlearnbe.dto.response.SubjectResponse;
-import org.project.createlearnbe.entities.Subject;
 import org.project.createlearnbe.mapper.SubjectMapper;
-import org.project.createlearnbe.repositories.SubjectRepository;
+import org.project.createlearnbe.utils.ImageUtil;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.project.createlearnbe.entities.Subject;
+import org.project.createlearnbe.repositories.SubjectRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class SubjectService {
 
-    private final SubjectRepository subjectRepository;
-    private final SubjectMapper subjectMapper;
+  private final SubjectRepository subjectRepository;
+  private final SubjectMapper subjectMapper;
 
-    @Transactional
-    public SubjectResponse create(SubjectRequest request) {
-        if (subjectRepository.existsByName(request.getName())) {
-            throw new IllegalArgumentException("Subject with name already exists: " + request.getName());
-        }
-        Subject subject = subjectMapper.toEntity(request);
-        return subjectMapper.toResponse(subjectRepository.save(subject));
+  public List<SubjectResponse> getAll() {
+    return subjectRepository.findAll().stream()
+        .map(subjectMapper::toResponse)
+        .collect(Collectors.toList());
+  }
+
+  public SubjectResponse create(SubjectRequest request) {
+    Subject subject = new Subject();
+    subject.setName(request.getName());
+    subject.setDescription(request.getDescription());
+    if (request.getIcon() != null && !request.getIcon().isEmpty()) {
+      subject.setIconBase64(ImageUtil.toBase64(request.getIcon()));
     }
+    return subjectMapper.toResponse(subjectRepository.save(subject));
+  }
 
-    @Transactional(readOnly = true)
-    public List<SubjectResponse> getAll() {
-        return subjectRepository.findAll()
-                .stream()
-                .map(subjectMapper::toResponse)
-                .toList();
+  public SubjectResponse update(Long id, SubjectRequest request) {
+    Subject subject =
+        subjectRepository.findById(id).orElseThrow(() -> new RuntimeException("Subject not found"));
+    subject.setName(request.getName());
+    subject.setDescription(request.getDescription());
+    if (request.getIcon() != null && !request.getIcon().isEmpty()) {
+      subject.setIconBase64(ImageUtil.toBase64(request.getIcon()));
     }
+    return subjectMapper.toResponse(subjectRepository.save(subject));
+  }
 
-    @Transactional(readOnly = true)
-    public SubjectResponse getById(Long id) {
-        Subject subject = subjectRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Subject not found with id: " + id));
-        return subjectMapper.toResponse(subject);
-    }
-
-    @Transactional
-    public SubjectResponse update(Long id, SubjectRequest request) {
-        Subject subject = subjectRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Subject not found with id: " + id));
-
-        subjectMapper.updateEntityFromRequest(request, subject);
-        return subjectMapper.toResponse(subjectRepository.save(subject));
-    }
-
-    @Transactional
-    public void delete(Long id) {
-        if (!subjectRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Subject not found with id: " + id);
-        }
-        subjectRepository.deleteById(id);
-    }
+  public void delete(Long id) {
+    subjectRepository.deleteById(id);
+  }
 }

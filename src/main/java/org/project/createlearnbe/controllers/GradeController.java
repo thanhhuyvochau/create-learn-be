@@ -1,7 +1,5 @@
 package org.project.createlearnbe.controllers;
 
-
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.project.createlearnbe.config.http.ApiResponse;
 import org.project.createlearnbe.dto.request.GradeRequest;
@@ -17,32 +15,35 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GradeController {
 
-    private final GradeService gradeService;
+  private final GradeService gradeService;
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<GradeResponse>> create(@Valid @RequestBody GradeRequest request) {
-        return ResponseEntity.ok(ApiResponse.success(gradeService.create(request)));
-    }
+  @GetMapping
+  public ResponseEntity<ApiResponse<List<GradeResponse>>> getAllGrades() {
+    return ResponseEntity.ok(ApiResponse.success(gradeService.getAll()));
+  }
 
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<GradeResponse>>> getAll() {
-        return ResponseEntity.ok(ApiResponse.success(gradeService.getAll()));
-    }
+  @GetMapping("/{id}")
+  public ResponseEntity<ApiResponse<GradeResponse>> getGradeById(@PathVariable Long id) {
+    return ResponseEntity.ok(ApiResponse.success(gradeService.getById(id)));
+  }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<GradeResponse>> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(ApiResponse.success(gradeService.getById(id)));
-    }
+  @PostMapping(consumes = {"multipart/form-data"})
+  public ResponseEntity<ApiResponse<GradeResponse>> createGrade(
+      @ModelAttribute GradeRequest request) {
+    return ResponseEntity.ok(ApiResponse.success(gradeService.create(request)));
+  }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<GradeResponse>> update(@PathVariable Long id,
-                                                             @Valid @RequestBody GradeRequest request) {
-        return ResponseEntity.ok(ApiResponse.success(gradeService.update(id, request)));
-    }
+  @PutMapping(
+      value = "/{id}",
+      consumes = {"multipart/form-data"})
+  public ResponseEntity<ApiResponse<GradeResponse>> updateGrade(
+      @PathVariable Long id, @ModelAttribute GradeRequest request) {
+    return ResponseEntity.ok(ApiResponse.success(gradeService.update(id, request)));
+  }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<String>> delete(@PathVariable Long id) {
-        gradeService.delete(id);
-        return ResponseEntity.ok(ApiResponse.success("Grade deleted successfully"));
-    }
+  @DeleteMapping("/{id}")
+  public ResponseEntity<ApiResponse<String>> deleteGrade(@PathVariable Long id) {
+    gradeService.delete(id);
+    return ResponseEntity.ok(ApiResponse.success("Grade deleted successfully"));
+  }
 }

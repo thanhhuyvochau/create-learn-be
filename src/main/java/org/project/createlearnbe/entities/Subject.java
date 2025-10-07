@@ -7,15 +7,17 @@ import lombok.Data;
 @Table(name = "subject")
 @Data
 public class Subject {
-    @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
-    private long id;
+  @Id
+  @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+  private long id;
 
-    @Column(nullable = false, length = 100)
-    private String name;
+  @Column(nullable = false, length = 100)
+  private String name;
 
-    @Column(length = 500)
-    private String description;
+  @Column(length = 500)
+  private String description;
 
-    private String iconUrl;
+  @Lob
+  @Column(columnDefinition = "LONGTEXT")
+  private String iconBase64;
 }

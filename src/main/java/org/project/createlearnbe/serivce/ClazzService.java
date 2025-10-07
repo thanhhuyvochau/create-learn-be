@@ -110,7 +110,7 @@ public class ClazzService {
                   sr.setId(s.getId());
                   sr.setName(s.getName());
                   sr.setDescription(s.getDescription());
-                  sr.setIconUrl(s.getIconUrl());
+                  sr.setIconBase64(s.getIconBase64());
                   return sr;
                 })
             .toList());
@@ -123,7 +123,7 @@ public class ClazzService {
                   gr.setId(g.getId());
                   gr.setName(g.getName());
                   gr.setDescription(g.getDescription());
-                  gr.setIconUrl(g.getIconUrl());
+                  gr.setIconBase64(g.getIconBase64());
                   return gr;
                 })
             .toList());
