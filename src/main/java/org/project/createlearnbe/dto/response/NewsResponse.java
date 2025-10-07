@@ -9,4 +9,5 @@ public class NewsResponse {
     private String brief;
     private String content;
     private Boolean isDisplay;
+    private String image;
 }

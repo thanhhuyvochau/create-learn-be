@@ -288,6 +288,7 @@ public class DataInitializer {
     news.setBrief(brief);
     news.setContent(content);
     news.setIsDisplay(isDisplay);
+    news.setImage("/create-learn-storage/954e34da-80fa-4d66-af03-0ce80fd86da1-Coding_planning_school_year_1f33b3289b.webp");
     return news;
   }
 

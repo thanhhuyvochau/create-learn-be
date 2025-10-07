@@ -19,4 +19,5 @@ public class News {
   private String content;
 
   private Boolean isDisplay;
+  private String image;
 }

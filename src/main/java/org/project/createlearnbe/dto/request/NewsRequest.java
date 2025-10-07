@@ -8,4 +8,5 @@ public class NewsRequest {
     private String brief;
     private String content;
     private Boolean isDisplay;
+    private String image;
 }
