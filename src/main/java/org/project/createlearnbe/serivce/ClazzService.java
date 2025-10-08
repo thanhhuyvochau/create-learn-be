@@ -7,14 +7,12 @@ import org.project.createlearnbe.config.http.ApiPage;
 import org.project.createlearnbe.config.minio.MinioProperties;
 import org.project.createlearnbe.dto.request.ClassRequest;
 import org.project.createlearnbe.dto.request.GetClassRequest;
-import org.project.createlearnbe.dto.response.ClassResponse;
-import org.project.createlearnbe.dto.response.GradeResponse;
-import org.project.createlearnbe.dto.response.SubjectResponse;
-import org.project.createlearnbe.dto.response.TeacherResponseDto;
+import org.project.createlearnbe.dto.response.*;
 import org.project.createlearnbe.entities.Clazz;
 import org.project.createlearnbe.entities.Subject;
 import org.project.createlearnbe.entities.Grade;
 import org.project.createlearnbe.entities.Teacher;
+import org.project.createlearnbe.mapper.ScheduleMapper;
 import org.project.createlearnbe.repositories.ClazzRepository;
 import org.project.createlearnbe.repositories.SubjectRepository;
 import org.project.createlearnbe.repositories.GradeRepository;
@@ -39,6 +37,7 @@ public class ClazzService {
   private final TeacherRepository teacherRepository;
   private final UrlUtils urlUtils;
   private final AppProperties appProperties;
+  private final ScheduleMapper scheduleMapper;
 
   public List<ClassResponse> getAll() {
     return clazzRepository.findAll().stream().map(this::toResponse).toList();
@@ -152,6 +151,11 @@ public class ClazzService {
       tr.setGender(teacher.getGender());
       tr.setProfileImageUrl(teacher.getProfileImageUrl());
       response.setTeacher(tr);
+    }
+
+    if (clazz.getSchedules() != null) {
+      response.setScheduleResponses(
+          clazz.getSchedules().stream().map(scheduleMapper::toResponse).toList());
     }
 
     return response;

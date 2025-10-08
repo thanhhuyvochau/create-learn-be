@@ -49,4 +49,7 @@ public class Clazz {
   private Boolean isDisplayed = true;
   private BigDecimal price = BigDecimal.ZERO;
   private Double clickCount = 0.0;
+
+  @OneToMany(mappedBy = "clazz", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Schedule> schedules;
 }

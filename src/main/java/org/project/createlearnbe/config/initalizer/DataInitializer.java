@@ -34,7 +34,8 @@ public class DataInitializer {
       TeacherRepository teacherRepository,
       NewsRepository newsRepository,
       PasswordEncoder passwordEncoder,
-      ClazzRepository classRepository) {
+      ClazzRepository classRepository,
+      ScheduleRepository scheduleRepository) {
     return args -> {
       if (appProperties.isInitMock()) {
         initAdmin(accountRepository, passwordEncoder);
@@ -43,7 +44,12 @@ public class DataInitializer {
         initConsultations(consultationRepository);
         initTeachers(teacherRepository);
         initNews(newsRepository);
-        initClazzes(classRepository, subjectRepository, gradeRepository, teacherRepository);
+        initClazzes(
+            classRepository,
+            subjectRepository,
+            gradeRepository,
+            teacherRepository,
+            scheduleRepository);
       }
     };
   }
@@ -288,7 +294,8 @@ public class DataInitializer {
     news.setBrief(brief);
     news.setContent(content);
     news.setIsDisplay(isDisplay);
-    news.setImage("/create-learn-storage/954e34da-80fa-4d66-af03-0ce80fd86da1-Coding_planning_school_year_1f33b3289b.webp");
+    news.setImage(
+        "/create-learn-storage/954e34da-80fa-4d66-af03-0ce80fd86da1-Coding_planning_school_year_1f33b3289b.webp");
     return news;
   }
 
@@ -296,9 +303,10 @@ public class DataInitializer {
       ClazzRepository clazzRepository,
       SubjectRepository subjectRepository,
       GradeRepository gradeRepository,
-      TeacherRepository teacherRepository) {
+      TeacherRepository teacherRepository,
+      ScheduleRepository scheduleRepository) {
+
     if (clazzRepository.count() == 0) {
-      // pick existing teacher
       Teacher teacher = teacherRepository.findAll().stream().findFirst().orElse(null);
 
       List<Subject> subjects =
@@ -318,6 +326,7 @@ public class DataInitializer {
       mathClass.setGrades(grades);
       mathClass.setTeacher(teacher);
       mathClass.setPrice(BigDecimal.valueOf(2000000));
+
       Clazz physicsClass = new Clazz();
       physicsClass.setName("Physics Exploration");
       physicsClass.setBrief("Understand the world of motion and forces.");
@@ -330,11 +339,30 @@ public class DataInitializer {
       physicsClass.setGrades(grades);
       physicsClass.setTeacher(teacher);
       physicsClass.setPrice(BigDecimal.ZERO);
+
       clazzRepository.saveAll(List.of(mathClass, physicsClass));
-      System.out.println("Inserted default classes into database.");
+
+      // --- Add Schedules ---
+      List<Schedule> schedules =
+          List.of(
+              createSchedule("Monday - 8am to 9am", mathClass),
+              createSchedule("Wednesday - 10am to 11am", mathClass),
+              createSchedule("Tuesday - 8am to 9am", physicsClass),
+              createSchedule("Thursday - 10am to 11am", physicsClass));
+
+      scheduleRepository.saveAll(schedules);
+
+      System.out.println("Inserted default classes and schedules into database.");
     } else {
       System.out.println("Classes already initialized, skipping.");
     }
+  }
+
+  private Schedule createSchedule(String time, Clazz clazz) {
+    Schedule schedule = new Schedule();
+    schedule.setTime(time);
+    schedule.setClazz(clazz);
+    return schedule;
   }
 
   private String encodeImageToBase64(String resourcePath) {

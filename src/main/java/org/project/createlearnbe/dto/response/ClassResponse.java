@@ -19,4 +19,5 @@ public class ClassResponse {
   private List<GradeResponse> grades;
   private TeacherResponseDto teacher;
   private BigDecimal price;
+  private List<ScheduleResponse> scheduleResponses;
 }
