@@ -1,7 +1,7 @@
 package org.project.createlearnbe.controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.project.createlearnbe.config.http.ApiResponse;
+import org.project.createlearnbe.config.http.ApiWrapper;
 import org.project.createlearnbe.serivce.FileStorageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,8 +18,8 @@ public class FileController {
     private final FileStorageService fileStorageService;
 
     @PostMapping("/upload")
-    public ResponseEntity<ApiResponse<String>> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<ApiWrapper<String>> uploadFile(@RequestParam("file") MultipartFile file) {
         String fileUrl = fileStorageService.uploadFile(file);
-        return ResponseEntity.ok(ApiResponse.success(fileUrl));
+        return ResponseEntity.ok(ApiWrapper.success(fileUrl));
     }
 }

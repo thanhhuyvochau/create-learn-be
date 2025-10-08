@@ -3,7 +3,7 @@ package org.project.createlearnbe.config.exception;
 import org.project.createlearnbe.config.exception.types.EmailDuplicateException;
 import org.project.createlearnbe.config.exception.types.PhoneDuplicateException;
 import org.project.createlearnbe.config.exception.types.UserNameDuplicateException;
-import org.project.createlearnbe.config.http.ApiResponse;
+import org.project.createlearnbe.config.http.ApiWrapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -27,7 +27,7 @@ public class RestExceptionHandler {
         });
         return ResponseEntity
                 .badRequest()
-                .body(ApiResponse.error(errorMessages.toString().trim(), HttpStatus.BAD_REQUEST.value()));
+                .body(ApiWrapper.error(errorMessages.toString().trim(), HttpStatus.BAD_REQUEST.value()));
     }
 
     @ExceptionHandler(Exception.class)
@@ -43,6 +43,6 @@ public class RestExceptionHandler {
     private ResponseEntity<Object> buildResponse(HttpStatus status, String message) {
         return ResponseEntity
                 .badRequest()
-                .body(ApiResponse.error(message, status.value()));
+                .body(ApiWrapper.error(message, status.value()));
     }
 }
