@@ -1,6 +1,9 @@
 package org.project.createlearnbe.serivce;
 
 import org.project.createlearnbe.constant.Role;
+import org.project.createlearnbe.dto.request.ChangePasswordByAdminRequest;
+import org.project.createlearnbe.dto.request.ChangePasswordByOwnerRequest;
+import org.project.createlearnbe.dto.request.DeactivateAccountRequest;
 import org.project.createlearnbe.dto.request.RegisterRequest;
 import org.project.createlearnbe.dto.response.AccountResponse;
 import org.project.createlearnbe.entities.Account;
@@ -11,6 +14,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class AccountService {
@@ -65,5 +70,38 @@ public class AccountService {
             .findByUsername(user.getUsername())
             .orElseThrow(() -> new RuntimeException("User not found"));
     return accountMapper.toResponse(loginAccount);
+  }
+
+  public String changePasswordByAdmin(UUID accountId, ChangePasswordByAdminRequest request) {
+    Account account =
+        accountRepository
+            .findById(accountId)
+            .orElseThrow(() -> new RuntimeException("Account not found"));
+    account.setPassword(passwordEncoder.encode(request.getNewPassword()));
+    accountRepository.save(account);
+    return "Password changed successfully by admin";
+  }
+
+  public String changePasswordByOwner(UUID accountId, ChangePasswordByOwnerRequest request) {
+    Account account =
+        accountRepository
+            .findById(accountId)
+            .orElseThrow(() -> new RuntimeException("Account not found"));
+    if (!passwordEncoder.matches(request.getOldPassword(), account.getPassword())) {
+      throw new RuntimeException("Old password is incorrect");
+    }
+    account.setPassword(passwordEncoder.encode(request.getNewPassword()));
+    accountRepository.save(account);
+    return "Password changed successfully";
+  }
+
+  public String deactivateAccount(UUID accountId, DeactivateAccountRequest request) {
+    Account account =
+        accountRepository
+            .findById(accountId)
+            .orElseThrow(() -> new RuntimeException("Account not found"));
+    account.setActivated(request.getActivated());
+    accountRepository.save(account);
+    return request.getActivated() ? "Account activated" : "Account deactivated";
   }
 }
