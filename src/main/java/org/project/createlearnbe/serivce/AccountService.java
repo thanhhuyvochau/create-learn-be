@@ -3,7 +3,7 @@ package org.project.createlearnbe.serivce;
 import org.project.createlearnbe.constant.Role;
 import org.project.createlearnbe.dto.request.ChangePasswordByAdminRequest;
 import org.project.createlearnbe.dto.request.ChangePasswordByOwnerRequest;
-import org.project.createlearnbe.dto.request.DeactivateAccountRequest;
+import org.project.createlearnbe.dto.request.ActivateAccountRequest;
 import org.project.createlearnbe.dto.request.RegisterRequest;
 import org.project.createlearnbe.dto.response.AccountResponse;
 import org.project.createlearnbe.entities.Account;
@@ -82,10 +82,15 @@ public class AccountService {
     return "Password changed successfully by admin";
   }
 
-  public String changePasswordByOwner(UUID accountId, ChangePasswordByOwnerRequest request) {
+  public String changePasswordByOwner(String username, ChangePasswordByOwnerRequest request) {
+    Authentication currentAuthentication = AuthUtil.getCurrentAuthentication();
+    User user = (User) currentAuthentication.getPrincipal();
+    if (!user.getUsername().equals(username)) {
+      throw new RuntimeException("You can only change your own password");
+    }
     Account account =
         accountRepository
-            .findById(accountId)
+            .findByUsername(username)
             .orElseThrow(() -> new RuntimeException("Account not found"));
     if (!passwordEncoder.matches(request.getOldPassword(), account.getPassword())) {
       throw new RuntimeException("Old password is incorrect");
@@ -95,7 +100,7 @@ public class AccountService {
     return "Password changed successfully";
   }
 
-  public String deactivateAccount(UUID accountId, DeactivateAccountRequest request) {
+  public String deactivateAccount(UUID accountId, ActivateAccountRequest request) {
     Account account =
         accountRepository
             .findById(accountId)

@@ -3,7 +3,7 @@ package org.project.createlearnbe.controllers;
 import org.project.createlearnbe.config.http.ApiResponse;
 import org.project.createlearnbe.dto.request.ChangePasswordByAdminRequest;
 import org.project.createlearnbe.dto.request.ChangePasswordByOwnerRequest;
-import org.project.createlearnbe.dto.request.DeactivateAccountRequest;
+import org.project.createlearnbe.dto.request.ActivateAccountRequest;
 import org.project.createlearnbe.dto.request.RegisterRequest;
 import org.project.createlearnbe.dto.response.AccountResponse;
 import org.project.createlearnbe.serivce.AccountService;
@@ -39,16 +39,16 @@ public class AccountController {
         ApiResponse.success(accountService.changePasswordByAdmin(id, request)));
   }
 
-  @PutMapping("/{id}/change-password")
+  @PutMapping("/{username}/change-password")
   public ResponseEntity<ApiResponse<String>> changePasswordByOwner(
-      @PathVariable UUID id, @RequestBody ChangePasswordByOwnerRequest request) {
+      @PathVariable String username, @RequestBody ChangePasswordByOwnerRequest request) {
     return ResponseEntity.ok(
-        ApiResponse.success(accountService.changePasswordByOwner(id, request)));
+        ApiResponse.success(accountService.changePasswordByOwner(username, request)));
   }
 
   @PutMapping("/{id}/activate")
-  public ResponseEntity<ApiResponse<String>> deactivateAccount(
-      @PathVariable UUID id, @RequestBody DeactivateAccountRequest request) {
+  public ResponseEntity<ApiResponse<String>> changeStatusAccount(
+      @PathVariable UUID id, @RequestBody ActivateAccountRequest request) {
     return ResponseEntity.ok(ApiResponse.success(accountService.deactivateAccount(id, request)));
   }
 }
