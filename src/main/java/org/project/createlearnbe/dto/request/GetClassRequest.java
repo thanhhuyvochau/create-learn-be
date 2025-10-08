@@ -11,4 +11,6 @@ import org.springframework.data.domain.Pageable;
 public class GetClassRequest {
   private String type;
   private Pageable pageable;
+  private Long gradeId;
+  private Long subjectId;
 }

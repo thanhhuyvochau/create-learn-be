@@ -9,7 +9,7 @@ import lombok.Data;
 public class Subject {
   @Id
   @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
-  private long id;
+  private Long id;
 
   @Column(nullable = false, length = 100)
   private String name;

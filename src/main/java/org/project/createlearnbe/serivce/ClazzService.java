@@ -19,6 +19,7 @@ import org.project.createlearnbe.repositories.GradeRepository;
 import org.project.createlearnbe.repositories.TeacherRepository;
 import org.project.createlearnbe.utils.UrlUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -162,19 +163,15 @@ public class ClazzService {
   }
 
   public ApiPage<ClassResponse> getAllPublicClass(GetClassRequest request) {
-    Page<Clazz> classes;
+    String type = request.getType() == null ? "" : request.getType().toLowerCase();
 
-    switch (request.getType() == null ? "" : request.getType().toLowerCase()) {
-      case "free" ->
-          classes =
-              clazzRepository.findAllByIsDisplayedAndPriceEquals(
-                  true, BigDecimal.ZERO, request.getPageable());
-      case "popular" ->
-          classes =
-              clazzRepository.findTopByIsDisplayedOrderByClickCountDesc(
-                  true, request.getPageable());
-      default -> classes = clazzRepository.findAllByIsDisplayed(true, request.getPageable());
-    }
+    boolean isFree = type.equals("free");
+    boolean isPopular = type.equals("popular");
+
+    Page<Clazz> classes =
+        clazzRepository.findPublicClasses(
+            isFree, isPopular, request.getGradeId(), request.getSubjectId(), request.getPageable());
+
     return ApiPage.of(classes.map(this::toResponse));
   }
 
@@ -186,5 +183,16 @@ public class ClazzService {
     clazz.setClickCount(clazz.getClickCount() + 1);
     clazzRepository.save(clazz);
     return toResponse(clazz);
+  }
+
+  private boolean isMatchGradeAndSubject(Long gradeId, Long subjectId, Clazz clazz) {
+    boolean result = true;
+    if (gradeId != null && gradeId > 0) {
+      result = clazz.getGrades().stream().anyMatch(g -> g.getId().equals(gradeId));
+    }
+    if (subjectId != null && subjectId > 0) {
+      result = clazz.getSubjects().stream().anyMatch(s -> s.getId().equals(subjectId));
+    }
+    return result;
   }
 }

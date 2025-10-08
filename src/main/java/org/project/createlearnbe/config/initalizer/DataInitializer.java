@@ -311,9 +311,10 @@ public class DataInitializer {
 
       List<Subject> subjects =
           subjectRepository.findAll().subList(0, Math.min(2, (int) subjectRepository.count()));
-      List<Grade> grades =
+      List<Grade> grades_1 =
           gradeRepository.findAll().subList(0, Math.min(2, (int) gradeRepository.count()));
-
+      List<Grade> grades_2 =
+              gradeRepository.findAll().subList(1, Math.min(3, (int) gradeRepository.count()));
       Clazz mathClass = new Clazz();
       mathClass.setName("Mathematics Excellence");
       mathClass.setBrief("Advanced problem-solving and algebra focus.");
@@ -323,7 +324,7 @@ public class DataInitializer {
       mathClass.setRequirement("Basic understanding of arithmetic operations.");
       mathClass.setGuarantee("Students will improve problem-solving skills.");
       mathClass.setSubjects(subjects);
-      mathClass.setGrades(grades);
+      mathClass.setGrades(grades_1);
       mathClass.setTeacher(teacher);
       mathClass.setPrice(BigDecimal.valueOf(2000000));
 
@@ -336,7 +337,7 @@ public class DataInitializer {
       physicsClass.setRequirement("Interest in science and curiosity about natural phenomena.");
       physicsClass.setGuarantee("Students will build a solid foundation in physics.");
       physicsClass.setSubjects(subjects);
-      physicsClass.setGrades(grades);
+      physicsClass.setGrades(grades_2);
       physicsClass.setTeacher(teacher);
       physicsClass.setPrice(BigDecimal.ZERO);
 

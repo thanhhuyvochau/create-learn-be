@@ -49,9 +49,14 @@ public class ClassController {
 
   @GetMapping("/public")
   public ResponseEntity<ApiResponse<ApiPage<ClassResponse>>> getAllPublicClass(
-      @RequestParam(required = false) String type, Pageable pageable) {
+      @RequestParam(required = false) String type,
+      Pageable pageable,
+      @RequestParam(required = false) Long gradeId,
+      @RequestParam(required = false) Long subjectId) {
     return ResponseEntity.ok(
-        ApiResponse.success(clazzService.getAllPublicClass(new GetClassRequest(type, pageable))));
+        ApiResponse.success(
+            clazzService.getAllPublicClass(
+                new GetClassRequest(type, pageable, gradeId, subjectId))));
   }
 
   @GetMapping("/public/{id}")
