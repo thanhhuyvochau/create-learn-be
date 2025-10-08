@@ -17,31 +17,36 @@ import java.util.Collections;
 
 @Configuration
 public class SecurityBeanManager {
-    private final AccountRepository accountRepository;
+  private final AccountRepository accountRepository;
 
-    public SecurityBeanManager(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
-    }
+  public SecurityBeanManager(AccountRepository accountRepository) {
+    this.accountRepository = accountRepository;
+  }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+      throws Exception {
+    return config.getAuthenticationManager();
+  }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        new Account();
-        return username -> accountRepository.findByUsername(username)
-                .map(account -> new User(
+  @Bean
+  public UserDetailsService userDetailsService() {
+    new Account();
+    return username ->
+        accountRepository
+            .findByUsername(username)
+            .map(
+                account ->
+                    new User(
                         account.getUsername(),
                         account.getPassword(),
-                        Collections.singleton(new SimpleGrantedAuthority("ROLE_" + account.getRole().getCode()))
-                ))
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-    }
+                        Collections.singleton(
+                            new SimpleGrantedAuthority("ROLE_" + account.getRole().getCode()))))
+            .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+  }
 }
