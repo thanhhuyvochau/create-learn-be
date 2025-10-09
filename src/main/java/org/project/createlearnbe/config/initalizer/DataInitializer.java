@@ -320,7 +320,7 @@ public class DataInitializer {
       mathClass.setBrief("Advanced problem-solving and algebra focus.");
       mathClass.setDescription(
           "This class helps students master mathematics with a focus on algebra, geometry, and calculus.");
-      mathClass.setImage("/images/math-class.png");
+      mathClass.setImage("/create-learn-storage/math.png");
       mathClass.setRequirement("Basic understanding of arithmetic operations.");
       mathClass.setGuarantee("Students will improve problem-solving skills.");
       mathClass.setSubjects(subjects);
@@ -333,7 +333,7 @@ public class DataInitializer {
       physicsClass.setBrief("Understand the world of motion and forces.");
       physicsClass.setDescription(
           "Covers classical mechanics, motion, forces, and introduction to energy.");
-      physicsClass.setImage("/images/physics-class.png");
+      physicsClass.setImage("/create-learn-storage/physic.jpg");
       physicsClass.setRequirement("Interest in science and curiosity about natural phenomena.");
       physicsClass.setGuarantee("Students will build a solid foundation in physics.");
       physicsClass.setSubjects(subjects);
