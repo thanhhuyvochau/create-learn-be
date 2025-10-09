@@ -13,10 +13,15 @@ import org.project.createlearnbe.config.http.ApiWrapper;
 import org.project.createlearnbe.dto.request.TeacherRequestDto;
 import org.project.createlearnbe.dto.response.TeacherResponseDto;
 import org.project.createlearnbe.serivce.TeacherService;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.project.createlearnbe.config.http.ApiPage;
 
 @Tag(
         name = "Teacher Management",
@@ -74,8 +79,11 @@ public class TeacherController {
             content = @Content(schema = @Schema(implementation = TeacherResponseDto.class))
     )
     @GetMapping
-    public ResponseEntity<ApiWrapper<List<TeacherResponseDto>>> getAllTeachers() {
-        return ResponseEntity.ok(ApiWrapper.success(teacherService.getAllTeachers()));
+    public ResponseEntity<ApiWrapper<ApiPage<TeacherResponseDto>>> getAllTeachers(
+            @ParameterObject
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC)
+            Pageable pageable) {
+        return ResponseEntity.ok(ApiWrapper.success(teacherService.getAllTeachers(pageable)));
     }
 
     @Operation(

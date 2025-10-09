@@ -1,6 +1,7 @@
 package org.project.createlearnbe.serivce;
 
 import lombok.RequiredArgsConstructor;
+import org.project.createlearnbe.config.http.ApiPage;
 import org.project.createlearnbe.dto.request.GradeRequest;
 import org.project.createlearnbe.dto.response.GradeResponse;
 import org.project.createlearnbe.entities.Grade;
@@ -9,8 +10,8 @@ import org.project.createlearnbe.repositories.GradeRepository;
 import org.project.createlearnbe.utils.ImageUtil;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 @RequiredArgsConstructor
@@ -19,10 +20,10 @@ public class GradeService {
   private final GradeRepository gradeRepository;
   private final GradeMapper gradeMapper;
 
-  public List<GradeResponse> getAll() {
-    return gradeRepository.findAll().stream()
-        .map(gradeMapper::toResponse)
-        .collect(Collectors.toList());
+  public ApiPage<GradeResponse> getAll(Pageable pageable) {
+      Page<Grade> grades = gradeRepository.findAll(pageable);
+
+      return ApiPage.of(grades.map(gradeMapper::toResponse));
   }
 
   public GradeResponse getById(Long id) {

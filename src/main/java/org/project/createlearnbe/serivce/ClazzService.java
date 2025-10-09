@@ -12,6 +12,7 @@ import org.project.createlearnbe.entities.Clazz;
 import org.project.createlearnbe.entities.Subject;
 import org.project.createlearnbe.entities.Grade;
 import org.project.createlearnbe.entities.Teacher;
+import org.project.createlearnbe.mapper.ClassMapper;
 import org.project.createlearnbe.mapper.ScheduleMapper;
 import org.project.createlearnbe.repositories.ClazzRepository;
 import org.project.createlearnbe.repositories.SubjectRepository;
@@ -21,7 +22,9 @@ import org.project.createlearnbe.utils.UrlUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.project.createlearnbe.mapper.ClassMapper;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -39,10 +42,12 @@ public class ClazzService {
   private final UrlUtils urlUtils;
   private final AppProperties appProperties;
   private final ScheduleMapper scheduleMapper;
+    private final ClassMapper classMapper;
 
-  public List<ClassResponse> getAll() {
-    return clazzRepository.findAll().stream().map(this::toResponse).toList();
-  }
+    public ApiPage<ClassResponse> getAll(Pageable pageable) {
+        Page<Clazz> classes = clazzRepository.findAll(pageable);
+        return ApiPage.of(classes.map(classMapper::toResponse));
+    }
 
   public ClassResponse getById(Long id) {
     Clazz clazz =

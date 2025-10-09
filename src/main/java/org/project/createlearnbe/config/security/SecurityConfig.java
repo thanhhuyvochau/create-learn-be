@@ -1,6 +1,8 @@
 package org.project.createlearnbe.config.security;
 
 import org.project.createlearnbe.config.security.filter.JwtFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -10,6 +12,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.util.List;
 
@@ -39,14 +42,26 @@ public class SecurityConfig {
 
   private final JwtFilter jwtFilter;
 
+  @Autowired(required = false)
+  @Qualifier("customCorsConfigurationSource")
+  private CorsConfigurationSource corsConfigurationSource;
+
   public SecurityConfig(JwtFilter jwtFilter) {
     this.jwtFilter = jwtFilter;
   }
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http.csrf(AbstractHttpConfigurer::disable)
-        .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    HttpSecurity httpSecurity = http.csrf(AbstractHttpConfigurer::disable);
+
+    // Only configure CORS if we have a custom CorsConfigurationSource
+    if (corsConfigurationSource != null) {
+      httpSecurity.cors(cors -> cors.configurationSource(corsConfigurationSource));
+    } else {
+      httpSecurity.cors(AbstractHttpConfigurer::disable);
+    }
+
+    httpSecurity.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth -> {
               // Apply each permit rule
@@ -63,7 +78,7 @@ public class SecurityConfig {
             })
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
-    return http.build();
+    return httpSecurity.build();
   }
 
   private record PermitRule(HttpMethod method, String pattern) {}

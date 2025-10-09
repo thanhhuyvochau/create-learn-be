@@ -6,9 +6,12 @@ import org.project.createlearnbe.dto.response.TeacherResponseDto;
 import org.project.createlearnbe.entities.Teacher;
 import org.project.createlearnbe.mapper.TeacherMapper;
 import org.project.createlearnbe.repositories.TeacherRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.project.createlearnbe.config.http.ApiPage;
 
 @Service
 @RequiredArgsConstructor
@@ -28,11 +31,10 @@ public class TeacherService {
         return teacherMapper.toDto(teacher);
     }
 
-    public List<TeacherResponseDto> getAllTeachers() {
-        return teacherRepository.findAll()
-                .stream()
-                .map(teacherMapper::toDto)
-                .toList();
+    public ApiPage<TeacherResponseDto> getAllTeachers(Pageable pageable) {
+        Page<Teacher> teachers = teacherRepository.findAll(pageable);
+
+        return ApiPage.of(teachers.map(teacherMapper::toDto));
     }
 
     public TeacherResponseDto updateTeacher(long id, TeacherRequestDto dto) {
