@@ -204,6 +204,7 @@ public class DataInitializer {
     consultation.setCustomerName(customerName);
     consultation.setPhoneNumber(phone);
     consultation.setEmail(email);
+    consultation.setContent("I want to know more about your classes.");
     return consultation;
   }
 
