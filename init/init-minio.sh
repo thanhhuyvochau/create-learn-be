@@ -1,5 +1,4 @@
 #!/bin/sh
-set -e
 
 echo "⏳ Waiting for MinIO to start..."
 sleep 10
@@ -16,7 +15,6 @@ else
 fi
 
 echo "📤 Syncing data from /data/minio/* into bucket (overwrite enabled)..."
-# Sync contents (not the directory itself)
-mc mirror --overwrite --remove /data/minio local/create-learn-storage
+mc mirror --overwrite /data/minio local/create-learn-storage
 
 echo "🎉 All objects updated successfully."
