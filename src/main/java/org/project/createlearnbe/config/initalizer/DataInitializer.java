@@ -1,6 +1,7 @@
 package org.project.createlearnbe.config.initalizer;
 
 import org.project.createlearnbe.config.AppProperties;
+import org.project.createlearnbe.constant.ProcessStatus;
 import org.project.createlearnbe.constant.Role;
 import org.project.createlearnbe.constant.Gender;
 import org.project.createlearnbe.entities.*;
@@ -205,6 +206,7 @@ public class DataInitializer {
     consultation.setPhoneNumber(phone);
     consultation.setEmail(email);
     consultation.setContent("I want to know more about your classes.");
+    consultation.setStatus(ProcessStatus.PROCESSING);
     return consultation;
   }
 

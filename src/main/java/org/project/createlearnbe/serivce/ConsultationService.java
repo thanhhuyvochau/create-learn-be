@@ -2,6 +2,7 @@ package org.project.createlearnbe.serivce;
 
 import lombok.RequiredArgsConstructor;
 import org.project.createlearnbe.config.http.ApiPage;
+import org.project.createlearnbe.constant.ProcessStatus;
 import org.project.createlearnbe.dto.request.ConsultationRequest;
 import org.project.createlearnbe.dto.response.ConsultationResponse;
 import org.project.createlearnbe.entities.Consultation;
@@ -23,6 +24,7 @@ public class ConsultationService {
   @Transactional
   public ConsultationResponse create(ConsultationRequest request) {
     Consultation entity = mapper.toEntity(request);
+    entity.setStatus(ProcessStatus.PROCESSING);
     return mapper.toResponse(consultationRepository.save(entity));
   }
 
@@ -42,13 +44,13 @@ public class ConsultationService {
   }
 
   @Transactional
-  public ConsultationResponse update(Long id, ConsultationRequest request) {
+  public ConsultationResponse update(Long id) {
     Consultation consultation =
         consultationRepository
             .findById(id)
             .orElseThrow(
                 () -> new IllegalArgumentException("Consultation not found with id " + id));
-    mapper.updateEntityFromRequest(request, consultation);
+    consultation.setStatus(ProcessStatus.PROCESSED);
     return mapper.toResponse(consultationRepository.save(consultation));
   }
 

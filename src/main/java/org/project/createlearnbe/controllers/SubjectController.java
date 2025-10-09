@@ -44,9 +44,7 @@ public class SubjectController {
             content = @Content(schema = @Schema(implementation = SubjectResponse.class))
     )
     @GetMapping
-    public ResponseEntity<ApiWrapper<ApiPage<SubjectResponse>>> getAllSubjects(@ParameterObject
-                                                                               @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC)
-                                                                               Pageable pageable) {
+    public ResponseEntity<ApiWrapper<ApiPage<SubjectResponse>>> getAllSubjects(Pageable pageable) {
         return ResponseEntity.ok(ApiWrapper.success(subjectService.getAll(pageable)));
     }
 

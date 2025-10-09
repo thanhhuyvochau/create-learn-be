@@ -2,7 +2,7 @@ package org.project.createlearnbe.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.project.createlearnbe.constant.RegistrationStatus;
+import org.project.createlearnbe.constant.ProcessStatus;
 
 @Entity
 @Table(name = "registrations")
@@ -17,5 +17,5 @@ public class Registration {
   private String phoneNumber;
 
   @Enumerated(EnumType.STRING)
-  private RegistrationStatus status;
+  private ProcessStatus status;
 }

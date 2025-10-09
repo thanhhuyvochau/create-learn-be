@@ -1,6 +1,6 @@
 package org.project.createlearnbe.constant;
 
-public enum RegistrationStatus {
+public enum ProcessStatus {
   PROCESSING,
   PROCESSED,
   REJECTED

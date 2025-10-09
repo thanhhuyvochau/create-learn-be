@@ -2,6 +2,7 @@ package org.project.createlearnbe.dto.response;
 
 
 import lombok.Data;
+import org.project.createlearnbe.constant.ProcessStatus;
 
 @Data
 public class ConsultationResponse {
@@ -10,4 +11,5 @@ public class ConsultationResponse {
     private String phoneNumber;
     private String email;
     private String content;
+    private ProcessStatus status;
 }

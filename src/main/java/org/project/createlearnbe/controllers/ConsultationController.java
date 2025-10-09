@@ -76,22 +76,15 @@ public class ConsultationController {
   }
 
   @Operation(
-      summary = "Update a consultation",
-      description = "Update details of an existing consultation by ID.")
+      summary = "Update a consultation status",
+      description = "Update status of an existing consultation by ID.")
   @ApiResponse(
       responseCode = "200",
       description = "Consultation updated successfully",
       content = @Content(schema = @Schema(implementation = ConsultationResponse.class)))
   @PutMapping("/{id}")
-  public ResponseEntity<ConsultationResponse> update(
-      @PathVariable Long id,
-      @RequestBody(
-              description = "Consultation update payload",
-              required = true,
-              content = @Content(schema = @Schema(implementation = ConsultationRequest.class)))
-          @org.springframework.web.bind.annotation.RequestBody
-          ConsultationRequest request) {
-    return ResponseEntity.ok(consultationService.update(id, request));
+  public ResponseEntity<ConsultationResponse> update(@PathVariable Long id) {
+    return ResponseEntity.ok(consultationService.update(id));
   }
 
   @Operation(
