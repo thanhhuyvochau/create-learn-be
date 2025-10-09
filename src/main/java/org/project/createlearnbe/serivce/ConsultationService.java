@@ -30,7 +30,15 @@ public class ConsultationService {
 
   @Transactional(readOnly = true)
   public ApiPage<ConsultationResponse> getAll(Pageable pageable) {
-    return ApiPage.of(consultationRepository.findAll(pageable).map(mapper::toResponse));
+    return ApiPage.of(
+        consultationRepository
+            .findAll(pageable)
+            .map(
+                c -> {
+                  ConsultationResponse response = mapper.toResponse(c);
+                  response.setStatus(c.getStatus());
+                  return response;
+                }));
   }
 
   @Transactional(readOnly = true)
