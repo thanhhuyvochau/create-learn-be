@@ -14,6 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
@@ -370,10 +373,17 @@ public class DataInitializer {
   }
 
   private String encodeImageToBase64(String resourcePath) {
-    try (InputStream is = getClass().getResourceAsStream(resourcePath)) {
+    try {
+      InputStream is = getClass().getResourceAsStream(resourcePath);
       if (is == null) {
-        System.err.println("Image not found: " + resourcePath);
-        return null;
+        // Fallback for local file system
+        Path path = Paths.get("src/main/resources" + resourcePath);
+        if (Files.exists(path)) {
+          is = Files.newInputStream(path);
+        } else {
+          System.err.println("Image not found: " + resourcePath);
+          return null;
+        }
       }
       byte[] bytes = is.readAllBytes();
       return Base64.getEncoder().encodeToString(bytes);
