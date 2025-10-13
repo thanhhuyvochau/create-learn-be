@@ -13,6 +13,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
@@ -71,19 +73,22 @@ public class SecurityConfig {
 
     return httpSecurity.build();
   }
-//
-//  @Bean
-//  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//    http
-//        // Enable CORS using the global WebMvcConfigurer
-//        .cors(cors -> {})
-//        // Disable CSRF (for APIs)
-//        .csrf(csrf -> csrf.disable())
-//        // Allow all requests (open access)
-//        .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
-//
-//    return http.build();
-//  }
+
+  @Bean
+  public WebMvcConfigurer corsConfigurer() {
+    return new WebMvcConfigurer() {
+      @Override
+      public void addCorsMappings(CorsRegistry registry) {
+        registry
+            .addMapping("/**")
+            .allowedOriginPatterns("*")
+            .allowedMethods("*")
+            .allowedHeaders("*")
+            .allowCredentials(true)
+            .maxAge(3600);
+      }
+    };
+  }
 
   private record PermitRule(HttpMethod method, String pattern) {}
 }
