@@ -13,8 +13,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
@@ -44,50 +42,44 @@ public class SecurityConfig {
 
   private final JwtFilter jwtFilter;
 
+  @Autowired(required = false)
+  @Qualifier("customCorsConfigurationSource")
+  private CorsConfigurationSource corsConfigurationSource;
+
   public SecurityConfig(JwtFilter jwtFilter) {
     this.jwtFilter = jwtFilter;
   }
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    HttpSecurity httpSecurity = http.cors(cors -> {}).csrf(AbstractHttpConfigurer::disable);
-    httpSecurity
-        .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    HttpSecurity httpSecurity = http.csrf(AbstractHttpConfigurer::disable);
+
+    // Only configure CORS if we have a custom CorsConfigurationSource
+    if (corsConfigurationSource != null) {
+      httpSecurity.cors(cors -> cors.configurationSource(corsConfigurationSource));
+    } else {
+      httpSecurity.cors(AbstractHttpConfigurer::disable);
+    }
+
+    httpSecurity.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth -> {
-              //              // Apply each permit rule
-              //              PUBLIC_ENDPOINTS.forEach(
-              //                  rule -> {
-              //                    if (rule.method() == ALL) {
-              //                      auth.requestMatchers(rule.pattern()).permitAll();
-              //                    } else {
-              //                      auth.requestMatchers(rule.method(),
-              // rule.pattern()).permitAll();
-              //                    }
-              //                  });
-              //
-              //              auth.anyRequest().authenticated();
-              auth.anyRequest().permitAll();
+//              // Apply each permit rule
+//              PUBLIC_ENDPOINTS.forEach(
+//                  rule -> {
+//                    if (rule.method() == ALL) {
+//                      auth.requestMatchers(rule.pattern()).permitAll();
+//                    } else {
+//                      auth.requestMatchers(rule.method(), rule.pattern()).permitAll();
+//                    }
+//                  });
+//
+//              auth.anyRequest().authenticated();
+                auth.anyRequest().permitAll();
             })
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
     return httpSecurity.build();
-  }
-
-  @Bean
-  public WebMvcConfigurer corsConfigurer() {
-    return new WebMvcConfigurer() {
-      @Override
-      public void addCorsMappings(CorsRegistry registry) {
-        registry
-            .addMapping("/**")
-            .allowedOriginPatterns("*")
-            .allowedMethods("*")
-            .allowedHeaders("*")
-            .allowCredentials(true)
-            .maxAge(3600);
-      }
-    };
   }
 
   private record PermitRule(HttpMethod method, String pattern) {}
