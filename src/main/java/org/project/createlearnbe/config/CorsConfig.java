@@ -3,8 +3,8 @@ package org.project.createlearnbe.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,26 +13,24 @@ import java.util.List;
 public class CorsConfig {
 
     @Bean("customCorsConfigurationSource")
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
 
-        // Allow all origins (both local and production)
-        configuration.setAllowedOriginPatterns(List.of("*"));
-
-        // Allow all HTTP methods
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-
-        // Allow all headers
-        configuration.setAllowedHeaders(List.of("*"));
+        // Allow all origins dynamically
+        config.addAllowedOriginPattern("*");
 
         // Allow credentials (cookies, authorization headers)
-        configuration.setAllowCredentials(true);
+        config.setAllowCredentials(true);
 
-        // Cache preflight response for 1 hour
-        configuration.setMaxAge(3600L);
+        // Allow all headers and methods
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+
+        config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
+        source.registerCorsConfiguration("/**", config);
+
+        return new CorsFilter(source);
     }
 }
