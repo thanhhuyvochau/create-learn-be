@@ -222,19 +222,19 @@ public class DataInitializer {
                   "Doe",
                   "Experienced math teacher with 10+ years of teaching high school students.",
                   Gender.MALE,
-                  "/images/john.png"),
+                  "/create-learn-storage/teacher.jpg"),
               createTeacher(
                   "Jane",
                   "Smith",
                   "Physics teacher passionate about experiments and real-world applications.",
                   Gender.FEMALE,
-                  "/images/jane.png"),
+                  "/create-learn-storage/teacher.jpg"),
               createTeacher(
                   "Michael",
                   "Brown",
                   "Chemistry teacher specializing in organic and inorganic chemistry.",
                   Gender.MALE,
-                  "/images/michael.png"),
+                  "/create-learn-storage/teacher.jpg"),
               createTeacher(
                   "Emily",
                   "Davis",
@@ -320,7 +320,7 @@ public class DataInitializer {
       List<Grade> grades_1 =
           gradeRepository.findAll().subList(0, Math.min(2, (int) gradeRepository.count()));
       List<Grade> grades_2 =
-              gradeRepository.findAll().subList(1, Math.min(3, (int) gradeRepository.count()));
+          gradeRepository.findAll().subList(1, Math.min(3, (int) gradeRepository.count()));
       Clazz mathClass = new Clazz();
       mathClass.setName("Mathematics Excellence");
       mathClass.setBrief("Advanced problem-solving and algebra focus.");
