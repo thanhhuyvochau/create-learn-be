@@ -32,7 +32,7 @@ minio:
   bucket: create-learn-storage
 
 app:
-  init-mock: true
+  init-mock: false
   top-class-limit: 7
 
 server:
