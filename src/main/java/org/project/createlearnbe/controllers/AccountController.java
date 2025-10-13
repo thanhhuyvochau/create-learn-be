@@ -23,6 +23,7 @@ import java.util.UUID;
 @Tag(name = "Account Management", description = "APIs for managing user accounts")
 @RestController
 @RequestMapping("/api/accounts")
+@CrossOrigin("*")
 public class AccountController {
   private final AccountService accountService;
 

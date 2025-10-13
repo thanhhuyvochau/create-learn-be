@@ -53,26 +53,23 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    HttpSecurity httpSecurity =
-        http.csrf(AbstractHttpConfigurer::disable).cors(Customizer.withDefaults());
+    HttpSecurity httpSecurity = http.csrf(AbstractHttpConfigurer::disable);
 
-    httpSecurity
-        .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    httpSecurity.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth -> {
-              //              // Apply each permit rule
-              //              PUBLIC_ENDPOINTS.forEach(
-              //                  rule -> {
-              //                    if (rule.method() == ALL) {
-              //                      auth.requestMatchers(rule.pattern()).permitAll();
-              //                    } else {
-              //                      auth.requestMatchers(rule.method(),
-              // rule.pattern()).permitAll();
-              //                    }
-              //                  });
-              //
-              //              auth.anyRequest().authenticated();
-              auth.anyRequest().permitAll();
+//              // Apply each permit rule
+//              PUBLIC_ENDPOINTS.forEach(
+//                  rule -> {
+//                    if (rule.method() == ALL) {
+//                      auth.requestMatchers(rule.pattern()).permitAll();
+//                    } else {
+//                      auth.requestMatchers(rule.method(), rule.pattern()).permitAll();
+//                    }
+//                  });
+//
+//              auth.anyRequest().authenticated();
+                auth.anyRequest().permitAll();
             })
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

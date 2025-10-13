@@ -45,7 +45,7 @@ public class CorsConfig {
 
         // TODO: Replace with actual production frontend URL when deployed
         // Example: configuration.setAllowedOrigins(List.of("https://yourdomain.com"));
-        configuration.setAllowedOrigins(List.of("*","http://localhost:3000"));
+        configuration.setAllowedOrigins(List.of("*"));
 
         // Allow all HTTP methods
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
