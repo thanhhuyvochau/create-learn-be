@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -52,30 +53,26 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    HttpSecurity httpSecurity = http.csrf(AbstractHttpConfigurer::disable);
+    HttpSecurity httpSecurity =
+        http.csrf(AbstractHttpConfigurer::disable).cors(Customizer.withDefaults());
 
-    // Only configure CORS if we have a custom CorsConfigurationSource
-    if (corsConfigurationSource != null) {
-      httpSecurity.cors(cors -> cors.configurationSource(corsConfigurationSource));
-    } else {
-      httpSecurity.cors(AbstractHttpConfigurer::disable);
-    }
-
-    httpSecurity.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    httpSecurity
+        .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth -> {
-//              // Apply each permit rule
-//              PUBLIC_ENDPOINTS.forEach(
-//                  rule -> {
-//                    if (rule.method() == ALL) {
-//                      auth.requestMatchers(rule.pattern()).permitAll();
-//                    } else {
-//                      auth.requestMatchers(rule.method(), rule.pattern()).permitAll();
-//                    }
-//                  });
-//
-//              auth.anyRequest().authenticated();
-                auth.anyRequest().permitAll();
+              //              // Apply each permit rule
+              //              PUBLIC_ENDPOINTS.forEach(
+              //                  rule -> {
+              //                    if (rule.method() == ALL) {
+              //                      auth.requestMatchers(rule.pattern()).permitAll();
+              //                    } else {
+              //                      auth.requestMatchers(rule.method(),
+              // rule.pattern()).permitAll();
+              //                    }
+              //                  });
+              //
+              //              auth.anyRequest().authenticated();
+              auth.anyRequest().permitAll();
             })
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
