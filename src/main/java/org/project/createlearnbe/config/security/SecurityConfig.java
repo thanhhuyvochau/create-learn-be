@@ -41,34 +41,49 @@ public class SecurityConfig {
           new PermitRule(HttpMethod.POST, "/api/registrations"));
 
   private final JwtFilter jwtFilter;
+
   public SecurityConfig(JwtFilter jwtFilter) {
     this.jwtFilter = jwtFilter;
   }
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    HttpSecurity httpSecurity = http.csrf(AbstractHttpConfigurer::disable);
-
-    httpSecurity.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    HttpSecurity httpSecurity = http.cors(cors -> {}).csrf(AbstractHttpConfigurer::disable);
+    httpSecurity
+        .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth -> {
-//              // Apply each permit rule
-//              PUBLIC_ENDPOINTS.forEach(
-//                  rule -> {
-//                    if (rule.method() == ALL) {
-//                      auth.requestMatchers(rule.pattern()).permitAll();
-//                    } else {
-//                      auth.requestMatchers(rule.method(), rule.pattern()).permitAll();
-//                    }
-//                  });
-//
-//              auth.anyRequest().authenticated();
-                auth.anyRequest().permitAll();
+              //              // Apply each permit rule
+              //              PUBLIC_ENDPOINTS.forEach(
+              //                  rule -> {
+              //                    if (rule.method() == ALL) {
+              //                      auth.requestMatchers(rule.pattern()).permitAll();
+              //                    } else {
+              //                      auth.requestMatchers(rule.method(),
+              // rule.pattern()).permitAll();
+              //                    }
+              //                  });
+              //
+              //              auth.anyRequest().authenticated();
+              auth.anyRequest().permitAll();
             })
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
     return httpSecurity.build();
   }
+//
+//  @Bean
+//  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//    http
+//        // Enable CORS using the global WebMvcConfigurer
+//        .cors(cors -> {})
+//        // Disable CSRF (for APIs)
+//        .csrf(csrf -> csrf.disable())
+//        // Allow all requests (open access)
+//        .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
+//
+//    return http.build();
+//  }
 
   private record PermitRule(HttpMethod method, String pattern) {}
 }
