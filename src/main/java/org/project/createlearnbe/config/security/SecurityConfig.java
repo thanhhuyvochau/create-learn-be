@@ -41,11 +41,6 @@ public class SecurityConfig {
           new PermitRule(HttpMethod.POST, "/api/registrations"));
 
   private final JwtFilter jwtFilter;
-
-  @Autowired(required = false)
-  @Qualifier("customCorsConfigurationSource")
-  private CorsConfigurationSource corsConfigurationSource;
-
   public SecurityConfig(JwtFilter jwtFilter) {
     this.jwtFilter = jwtFilter;
   }
@@ -53,13 +48,6 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     HttpSecurity httpSecurity = http.csrf(AbstractHttpConfigurer::disable);
-
-    // Only configure CORS if we have a custom CorsConfigurationSource
-    if (corsConfigurationSource != null) {
-      httpSecurity.cors(cors -> cors.configurationSource(corsConfigurationSource));
-    } else {
-      httpSecurity.cors(AbstractHttpConfigurer::disable);
-    }
 
     httpSecurity.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
