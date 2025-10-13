@@ -53,7 +53,7 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    HttpSecurity httpSecurity = http.csrf(AbstractHttpConfigurer::disable);
+    HttpSecurity httpSecurity = http.csrf(AbstractHttpConfigurer::disable).cors(cors -> {});
 
     httpSecurity.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
