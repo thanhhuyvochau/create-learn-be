@@ -1,12 +1,16 @@
 package org.project.createlearnbe.config;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -15,27 +19,27 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
+    /**
+     * ✅ 1. Universal CORS configuration (for all endpoints)
+     */
     @Bean
-    public CorsFilter corsFilter() {
-        CorsConfiguration config = new CorsConfiguration();
-
-        // ✅ Allow all origins (supports credentials)
-        config.addAllowedOriginPattern("*");
-        config.setAllowCredentials(true);
-
-        // ✅ Allow all headers & methods
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-        config.setMaxAge(3600L);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-
-        return new CorsFilter(source);
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOriginPatterns("*")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+                        .allowedHeaders("*")
+                        .allowCredentials(true)
+                        .maxAge(3600);
+            }
+        };
     }
 
     /**
-     * ✅ Extra security & referrer policy headers to handle strict-origin-when-cross-origin
+     * ✅ 2. Extra headers to fix "strict-origin-when-cross-origin"
+     * Adds proper referrer policy and cross-origin headers for browser compatibility.
      */
     @Bean
     public Filter addSecurityHeadersFilter() {
@@ -46,15 +50,15 @@ public class CorsConfig {
 
                 HttpServletResponse res = (HttpServletResponse) response;
 
-                // Allow cross-origin requests
+                // Required CORS headers
                 res.setHeader("Access-Control-Allow-Origin", "*");
-                res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,PATCH,OPTIONS");
+                res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, PATCH, OPTIONS");
                 res.setHeader("Access-Control-Allow-Headers", "*");
 
-                // ✅ Fix the strict-origin-when-cross-origin behavior
+                // ✅ Fix for "strict-origin-when-cross-origin"
                 res.setHeader("Referrer-Policy", "no-referrer-when-downgrade");
 
-                // Optional: helpful for modern cross-origin setups
+                // Optional: extra compatibility headers for modern browsers
                 res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
                 res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
                 res.setHeader("Cross-Origin-Embedder-Policy", "unsafe-none");
