@@ -21,7 +21,6 @@ public class CorsConfig {
                         .allowedOriginPatterns("*") // allow all origins (for Spring Boot 3+)
                         .allowedMethods("*") // allow all HTTP methods
                         .allowedHeaders("*") // allow all headers
-                        .allowCredentials(true) // allow cookies, Authorization headers
                         .maxAge(3600); // cache preflight requests for 1 hour
             }
         };

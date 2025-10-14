@@ -30,7 +30,7 @@ public class ConsultationService {
 
   @Transactional(readOnly = true)
   public ApiPage<ConsultationResponse> getAll(Pageable pageable) {
-    return ApiPage.of(consultationRepository.findAll(pageable).map(mapper::toResponse));
+    return ApiPage.of(consultationRepository.findAllSortedByStatusAndCreatedAt(pageable).map(mapper::toResponse));
   }
 
   @Transactional(readOnly = true)
@@ -51,6 +51,7 @@ public class ConsultationService {
             .orElseThrow(
                 () -> new IllegalArgumentException("Consultation not found with id " + id));
     consultation.setStatus(ProcessStatus.PROCESSED);
+    consultation = consultationRepository.save(consultation);
     return mapper.toResponse(consultationRepository.save(consultation));
   }
 

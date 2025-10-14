@@ -58,23 +58,37 @@ public class SecurityConfig {
     httpSecurity.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth -> {
-//              // Apply each permit rule
-//              PUBLIC_ENDPOINTS.forEach(
-//                  rule -> {
-//                    if (rule.method() == ALL) {
-//                      auth.requestMatchers(rule.pattern()).permitAll();
-//                    } else {
-//                      auth.requestMatchers(rule.method(), rule.pattern()).permitAll();
-//                    }
-//                  });
-//
-//              auth.anyRequest().authenticated();
                 auth.anyRequest().permitAll();
             })
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
     return httpSecurity.build();
   }
+
+  // **Authentication Applied**
+//  @Bean
+//  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//    HttpSecurity httpSecurity = http.csrf(AbstractHttpConfigurer::disable).cors(cors -> {});
+//
+//    httpSecurity.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//            .authorizeHttpRequests(
+//                    auth -> {
+//                      // Apply each permit rule
+//                      PUBLIC_ENDPOINTS.forEach(
+//                              rule -> {
+//                                if (rule.method() == ALL) {
+//                                  auth.requestMatchers(rule.pattern()).permitAll();
+//                                } else {
+//                                  auth.requestMatchers(rule.method(), rule.pattern()).permitAll();
+//                                }
+//                              });
+//
+//                      auth.anyRequest().authenticated();
+//                    })
+//            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+//
+//    return httpSecurity.build();
+//  }
 
   private record PermitRule(HttpMethod method, String pattern) {}
 }

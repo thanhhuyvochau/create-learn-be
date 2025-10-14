@@ -75,6 +75,6 @@ public class RegistrationService {
   }
 
   public Page<RegistrationResponse> getAll(Pageable pageable) {
-    return registrationRepository.findAll(pageable).map(this::toResponse);
+    return registrationRepository.findAllSortedByStatusAndCreatedAt(pageable).map(this::toResponse);
   }
 }
