@@ -96,17 +96,26 @@ public class SecurityConfig {
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
 
+    // ⚠️ WARNING: CorsConfiguration.ALL uses the wildcard "*"
+    // This achieves the goal of allowing "all traffic" but is NOT recommended for production.
 
-    configuration.setAllowedOrigins(Arrays.asList(CorsConfiguration.ALL));
+    // Allow all origins (all domains) using patterns to support credentials
+    // Fixes: java.lang.IllegalArgumentException when setAllowCredentials(true) is used with "*"
+    configuration.setAllowedOriginPatterns(List.of(CorsConfiguration.ALL));
 
-    configuration.setAllowedMethods(Arrays.asList(CorsConfiguration.ALL));
+    // Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    configuration.setAllowedMethods(List.of(CorsConfiguration.ALL));
 
-    configuration.setAllowedHeaders(Arrays.asList(CorsConfiguration.ALL));
+    // Allow all headers (e.g., Authorization, Content-Type)
+    configuration.setAllowedHeaders(List.of(CorsConfiguration.ALL));
 
+    // Allow credentials (important for session cookies or custom headers like Authorization)
     configuration.setAllowCredentials(true);
 
+    // Define which headers the browser is allowed to expose to the client (optional)
     configuration.setExposedHeaders(List.of("Authorization", "Content-Type"));
 
+    // Cache the preflight response for 1 hour (3600 seconds)
     configuration.setMaxAge(3600L);
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
