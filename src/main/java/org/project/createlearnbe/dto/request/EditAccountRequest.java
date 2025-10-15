@@ -8,4 +8,7 @@ public class EditAccountRequest {
   private String password;
   private Role role;
   private Boolean activated;
+  private String email;
+  private String username;
+  private String phone;
 }

@@ -119,6 +119,27 @@ public class AccountService {
       account.setActivated(false);
     }
 
+    if(request.getUsername() != null && !request.getUsername().equals(account.getUsername())) {
+      if (existsByUsername(request.getUsername())) {
+        throw new RuntimeException("Username already exists");
+      }
+      account.setUsername(request.getUsername());
+    }
+
+    if(request.getPhone() != null && !request.getPhone().equals(account.getPhone())) {
+      if (existsByPhone(request.getPhone())) {
+        throw new RuntimeException("Phone already exists");
+      }
+      account.setPhone(request.getPhone());
+    }
+
+    if (request.getEmail() != null && !request.getEmail().equals(account.getEmail())) {
+      if (existsByEmail(request.getEmail())) {
+        throw new RuntimeException("Email already exists");
+      }
+      account.setEmail(request.getEmail());
+    }
+
     accountRepository.save(account);
     return "Account updated successfully";
   }
