@@ -16,4 +16,5 @@ public class RegistrationResponse {
   private Instant createdAt;
   private String updatedBy;
   private Instant updatedAt;
+  private ClassResponse classResponse;
 }

@@ -22,6 +22,8 @@ public class Registration extends Auditable {
 
   @Enumerated(EnumType.STRING)
   private ProcessStatus status;
-
+  @ManyToOne
+  @JoinColumn(name = "clazz_id")
+  private Clazz clazz;
 
 }

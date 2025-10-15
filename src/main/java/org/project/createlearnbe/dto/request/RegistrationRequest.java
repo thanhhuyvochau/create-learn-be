@@ -9,4 +9,5 @@ public class RegistrationRequest {
   private String customerEmail;
   private String phoneNumber;
   private ProcessStatus status;
+  private Long clazzId;
 }

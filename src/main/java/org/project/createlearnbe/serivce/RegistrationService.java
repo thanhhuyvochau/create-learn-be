@@ -5,7 +5,10 @@ import org.project.createlearnbe.constant.ProcessStatus;
 import org.project.createlearnbe.dto.request.ChangeStatusRegistrationRequest;
 import org.project.createlearnbe.dto.request.RegistrationRequest;
 import org.project.createlearnbe.dto.response.RegistrationResponse;
+import org.project.createlearnbe.entities.Clazz;
 import org.project.createlearnbe.entities.Registration;
+import org.project.createlearnbe.mapper.ClassMapper;
+import org.project.createlearnbe.repositories.ClazzRepository;
 import org.project.createlearnbe.repositories.RegistrationRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class RegistrationService {
 
   private final RegistrationRepository registrationRepository;
+  private final ClazzRepository clazzRepository;
+  private final ClassMapper classMapper;
 
   private RegistrationResponse toResponse(Registration registration) {
     RegistrationResponse response = new RegistrationResponse();
@@ -26,6 +31,11 @@ public class RegistrationService {
     response.setCustomerEmail(registration.getCustomerEmail());
     response.setPhoneNumber(registration.getPhoneNumber());
     response.setStatus(registration.getStatus());
+    response.setCreatedAt(registration.getCreatedAt());
+    response.setUpdatedAt(registration.getUpdatedAt());
+    response.setCreatedBy(registration.getCreatedBy());
+    response.setUpdatedBy(registration.getUpdatedBy());
+    response.setClassResponse(classMapper.toResponse(registration.getClazz()));
     return response;
   }
 
@@ -34,6 +44,12 @@ public class RegistrationService {
     registration.setCustomerName(request.getCustomerName());
     registration.setCustomerEmail(request.getCustomerEmail());
     registration.setPhoneNumber(request.getPhoneNumber());
+    Clazz clazz =
+        clazzRepository
+            .findById(request.getClazzId())
+            .orElseThrow(
+                () -> new RuntimeException("Class not found with id " + request.getClazzId()));
+    registration.setClazz(clazz);
     if (action.equals("create")) {
       registration.setStatus(ProcessStatus.PROCESSING);
     } else if (action.equals("update")) {
