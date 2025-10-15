@@ -1,6 +1,7 @@
 package org.project.createlearnbe.serivce;
 
 import lombok.RequiredArgsConstructor;
+import org.project.createlearnbe.config.http.ApiPage;
 import org.project.createlearnbe.dto.request.ScheduleRequest;
 import org.project.createlearnbe.dto.response.ScheduleResponse;
 import org.project.createlearnbe.entities.Clazz;
@@ -8,6 +9,7 @@ import org.project.createlearnbe.entities.Schedule;
 import org.project.createlearnbe.mapper.ScheduleMapper;
 import org.project.createlearnbe.repositories.ClazzRepository;
 import org.project.createlearnbe.repositories.ScheduleRepository;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -58,14 +60,12 @@ public class ScheduleService {
     scheduleRepository.deleteById(id);
   }
 
-  public ScheduleResponse getById(Long id) {
-    return scheduleRepository
-        .findById(id)
-        .map(scheduleMapper::toResponse)
-        .orElseThrow(() -> new RuntimeException("Schedule not found with id " + id));
+  public ApiPage<ScheduleResponse> getByClassId(Long clazzId, Pageable pageable) {
+    return ApiPage.of(
+        scheduleRepository.findAllByClazz_Id(clazzId, pageable).map(scheduleMapper::toResponse));
   }
 
-  public List<ScheduleResponse> getAll() {
-    return scheduleRepository.findAll().stream().map(scheduleMapper::toResponse).toList();
+  public ApiPage<ScheduleResponse> getAll(Pageable pageable) {
+    return ApiPage.of(scheduleRepository.findAll(pageable).map(scheduleMapper::toResponse));
   }
 }
