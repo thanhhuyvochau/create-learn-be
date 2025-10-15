@@ -71,7 +71,7 @@ public class DataInitializer {
       admin.setPassword(passwordEncoder.encode("admin123"));
       admin.setRole(Role.ADMIN);
       admin.setPhone("0000000000");
-
+      admin.setActivated(true);
       accountRepository.save(admin);
       System.out.println("Root admin account created: " + adminUsername);
     } else {

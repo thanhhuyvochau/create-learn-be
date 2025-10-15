@@ -15,4 +15,5 @@ public class AccountResponse {
     private String phone;
     @Enumerated(EnumType.STRING)
     private Role role;
+    private Boolean activated;
 }

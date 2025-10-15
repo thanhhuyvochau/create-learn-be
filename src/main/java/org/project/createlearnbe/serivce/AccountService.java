@@ -1,15 +1,15 @@
 package org.project.createlearnbe.serivce;
 
+import org.project.createlearnbe.config.http.ApiPage;
 import org.project.createlearnbe.constant.Role;
-import org.project.createlearnbe.dto.request.ChangePasswordByAdminRequest;
-import org.project.createlearnbe.dto.request.ChangePasswordByOwnerRequest;
-import org.project.createlearnbe.dto.request.ActivateAccountRequest;
-import org.project.createlearnbe.dto.request.RegisterRequest;
+import org.project.createlearnbe.dto.request.*;
 import org.project.createlearnbe.dto.response.AccountResponse;
 import org.project.createlearnbe.entities.Account;
 import org.project.createlearnbe.mapper.AccountMapper;
 import org.project.createlearnbe.repositories.AccountRepository;
 import org.project.createlearnbe.utils.AuthUtil;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -57,7 +57,8 @@ public class AccountService {
       account.setEmail(request.getEmail());
       account.setPhone(request.getPhone());
       account.setPassword(passwordEncoder.encode(request.getPassword()));
-      account.setRole(Role.ADMIN);
+      account.setRole(request.getRole() != null ? request.getRole() : Role.OPERATOR);
+      account.setActivated(request.getActivated() != null ? request.getActivated() : true);
       return accountMapper.toResponse(accountRepository.save(account));
     }
   }
@@ -100,13 +101,29 @@ public class AccountService {
     return "Password changed successfully";
   }
 
-  public String deactivateAccount(UUID accountId, ActivateAccountRequest request) {
+  public String editAccount(UUID accountId, EditAccountRequest request) {
     Account account =
         accountRepository
             .findById(accountId)
             .orElseThrow(() -> new RuntimeException("Account not found"));
-    account.setActivated(request.getActivated());
+
+    if (request.getPassword() != null) {
+      account.setPassword(passwordEncoder.encode(request.getPassword()));
+    }
+
+    if (request.getRole() != null) {
+      account.setRole(request.getRole());
+    }
+
+    if (request.getActivated() != null && !request.getActivated()) {
+      account.setActivated(false);
+    }
+
     accountRepository.save(account);
-    return request.getActivated() ? "Account activated" : "Account deactivated";
+    return "Account updated successfully";
+  }
+  public ApiPage<AccountResponse> getAllAccounts(Pageable pageable) {
+    Page<Account> accounts = accountRepository.findAll(pageable);
+    return new ApiPage<>(accounts.map(accountMapper::toResponse));
   }
 }
