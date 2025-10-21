@@ -46,8 +46,6 @@ public class SecurityConfig {
 
   private final JwtFilter jwtFilter;
 
-
-
   public SecurityConfig(JwtFilter jwtFilter) {
     this.jwtFilter = jwtFilter;
   }
@@ -56,10 +54,11 @@ public class SecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     HttpSecurity httpSecurity = http.csrf(csrf -> csrf.disable()).cors(Customizer.withDefaults());
 
-    httpSecurity.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+    httpSecurity
+        .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(
             auth -> {
-                auth.anyRequest().permitAll();
+              auth.anyRequest().permitAll();
             })
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -67,31 +66,34 @@ public class SecurityConfig {
   }
 
   // **Authentication Applied**
-//  @Bean
-//  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//    HttpSecurity httpSecurity = http.csrf(AbstractHttpConfigurer::disable).cors(cors -> {});
-//
-//    httpSecurity.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//            .authorizeHttpRequests(
-//                    auth -> {
-//                      // Apply each permit rule
-//                      PUBLIC_ENDPOINTS.forEach(
-//                              rule -> {
-//                                if (rule.method() == ALL) {
-//                                  auth.requestMatchers(rule.pattern()).permitAll();
-//                                } else {
-//                                  auth.requestMatchers(rule.method(), rule.pattern()).permitAll();
-//                                }
-//                              });
-//
-//                      auth.anyRequest().authenticated();
-//                    })
-//            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-//
-//    return httpSecurity.build();
-//  }
+  //  @Bean
+  //  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  //    HttpSecurity httpSecurity = http.csrf(AbstractHttpConfigurer::disable).cors(cors -> {});
+  //
+  //    httpSecurity.sessionManagement(sm ->
+  // sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+  //            .authorizeHttpRequests(
+  //                    auth -> {
+  //                      // Apply each permit rule
+  //                      PUBLIC_ENDPOINTS.forEach(
+  //                              rule -> {
+  //                                if (rule.method() == ALL) {
+  //                                  auth.requestMatchers(rule.pattern()).permitAll();
+  //                                } else {
+  //                                  auth.requestMatchers(rule.method(),
+  // rule.pattern()).permitAll();
+  //                                }
+  //                              });
+  //
+  //                      auth.anyRequest().authenticated();
+  //                    })
+  //            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+  //
+  //    return httpSecurity.build();
+  //  }
 
   private record PermitRule(HttpMethod method, String pattern) {}
+
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
@@ -101,7 +103,8 @@ public class SecurityConfig {
 
     // Allow all origins (all domains) using patterns to support credentials
     // Fixes: java.lang.IllegalArgumentException when setAllowCredentials(true) is used with "*"
-    configuration.setAllowedOriginPatterns(List.of(CorsConfiguration.ALL));
+    configuration.setAllowedOriginPatterns(
+        List.of("https://create-learn-ui.vercel.app/", "http://localhost:3000"));
 
     // Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
     configuration.setAllowedMethods(List.of(CorsConfiguration.ALL));
