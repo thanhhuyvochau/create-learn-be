@@ -104,7 +104,7 @@ public class SecurityConfig {
     // Allow all origins (all domains) using patterns to support credentials
     // Fixes: java.lang.IllegalArgumentException when setAllowCredentials(true) is used with "*"
     configuration.setAllowedOriginPatterns(
-        List.of("https://create-learn-ui.vercel.app/", "http://localhost:3000"));
+        List.of("https://create-learn-ui.vercel.app", "http://localhost:3000", "http://103.81.84.247:3000"));
 
     // Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
     configuration.setAllowedMethods(List.of(CorsConfiguration.ALL));
