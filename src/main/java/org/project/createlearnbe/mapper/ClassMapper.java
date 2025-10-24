@@ -24,9 +24,10 @@ import org.springframework.beans.factory.annotation.Autowired;
         }
 )
 public abstract class ClassMapper {
-
     @Autowired
-    protected UrlUtils urlUtils;
+    private UrlUtils urlUtils;
+    @Autowired
+    private ScheduleMapper scheduleMapper;
 
     public abstract ClassResponse toResponse(Clazz clazz);
 
@@ -39,6 +40,8 @@ public abstract class ClassMapper {
         // Ensure non-null collections (MapStruct may set null if source null)
         if (dto.getSubjects() == null) dto.setSubjects(java.util.List.of());
         if (dto.getGrades() == null) dto.setGrades(java.util.List.of());
-        if (dto.getScheduleResponses() == null) dto.setScheduleResponses(java.util.List.of());
+        if (dto.getScheduleResponses() == null){
+
+        }
     }
 }

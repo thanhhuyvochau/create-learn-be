@@ -47,8 +47,7 @@ public class ScheduleService {
             .orElseThrow(
                 () -> new RuntimeException("Clazz not found with id " + request.getClazzId()));
 
-    scheduleMapper.updateScheduleFromRequest(request, schedule);
-    scheduleMapper.linkClazz(schedule, request, clazz);
+    schedule.setTime(request.getTime());
     scheduleRepository.save(schedule);
     return scheduleMapper.toResponse(schedule);
   }

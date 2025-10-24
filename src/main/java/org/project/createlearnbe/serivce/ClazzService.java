@@ -40,14 +40,12 @@ public class ClazzService {
   private final GradeRepository gradeRepository;
   private final TeacherRepository teacherRepository;
   private final UrlUtils urlUtils;
-  private final AppProperties appProperties;
   private final ScheduleMapper scheduleMapper;
-    private final ClassMapper classMapper;
 
-    public ApiPage<ClassResponse> getAll(Pageable pageable) {
-        Page<Clazz> classes = clazzRepository.findAll(pageable);
-        return ApiPage.of(classes.map(classMapper::toResponse));
-    }
+  public ApiPage<ClassResponse> getAll(Pageable pageable) {
+    Page<Clazz> classes = clazzRepository.findAll(pageable);
+    return ApiPage.of(classes.map(this::toResponse));
+  }
 
   public ClassResponse getById(Long id) {
     Clazz clazz =
