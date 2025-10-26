@@ -9,7 +9,7 @@ import org.project.createlearnbe.entities.Teacher;
 import org.project.createlearnbe.utils.UrlUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring", uses = {UrlUtils.class})
+@Mapper(componentModel = "spring")
 public abstract class TeacherMapper {
 
     @Autowired
