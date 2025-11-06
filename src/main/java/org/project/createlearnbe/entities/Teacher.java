@@ -1,10 +1,9 @@
 package org.project.createlearnbe.entities;
 
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.Data;
 import org.project.createlearnbe.constant.Gender;
-
-import java.util.List;
 
 @Data
 @Entity

@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class ConsultationRequest {
-    private String customerName;
-    private String phoneNumber;
-    private String email;
-    private String content;
+  private String customerName;
+  private String phoneNumber;
+  private String email;
+  private String content;
 }

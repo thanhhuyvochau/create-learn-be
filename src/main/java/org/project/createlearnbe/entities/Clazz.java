@@ -1,10 +1,9 @@
 package org.project.createlearnbe.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
-
 import java.math.BigDecimal;
 import java.util.List;
+import lombok.Data;
 
 @Entity
 @Table(name = "clazz")

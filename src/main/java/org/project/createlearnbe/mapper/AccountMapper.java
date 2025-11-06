@@ -6,5 +6,5 @@ import org.project.createlearnbe.entities.Account;
 
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
-    AccountResponse toResponse(Account account);
+  AccountResponse toResponse(Account account);
 }

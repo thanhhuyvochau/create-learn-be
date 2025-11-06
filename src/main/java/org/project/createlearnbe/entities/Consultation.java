@@ -5,12 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.project.createlearnbe.config.audit.Auditable;
 import org.project.createlearnbe.constant.ProcessStatus;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import java.time.Instant;
 
 @Getter
 @Setter

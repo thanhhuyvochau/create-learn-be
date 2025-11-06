@@ -1,13 +1,13 @@
 package org.project.createlearnbe.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.UUID;
 import org.project.createlearnbe.config.http.ApiPage;
 import org.project.createlearnbe.config.http.ApiWrapper;
 import org.project.createlearnbe.dto.request.*;
@@ -16,8 +16,6 @@ import org.project.createlearnbe.serivce.AccountService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @Tag(name = "Account Management", description = "APIs for managing user accounts")
 @RestController

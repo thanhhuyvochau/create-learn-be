@@ -11,20 +11,17 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @SpringBootApplication
 @OpenAPIDefinition(
-        info = @Info(title = "Create Learn API", version = "1.0"),
-        security = @SecurityRequirement(name = "bearerAuth")
-)
+    info = @Info(title = "Create Learn API", version = "1.0"),
+    security = @SecurityRequirement(name = "bearerAuth"))
 @SecurityScheme(
-        name = "bearerAuth",
-        type = SecuritySchemeType.HTTP,
-        scheme = "bearer",
-        bearerFormat = "JWT"
-)
+    name = "bearerAuth",
+    type = SecuritySchemeType.HTTP,
+    scheme = "bearer",
+    bearerFormat = "JWT")
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 public class CreateLearnBeApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(CreateLearnBeApplication.class, args);
-    }
-
+  public static void main(String[] args) {
+    SpringApplication.run(CreateLearnBeApplication.class, args);
+  }
 }

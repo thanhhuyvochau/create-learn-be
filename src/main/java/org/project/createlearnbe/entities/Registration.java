@@ -1,7 +1,6 @@
 package org.project.createlearnbe.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.project.createlearnbe.config.audit.Auditable;
@@ -22,8 +21,8 @@ public class Registration extends Auditable {
 
   @Enumerated(EnumType.STRING)
   private ProcessStatus status;
+
   @ManyToOne
   @JoinColumn(name = "clazz_id")
   private Clazz clazz;
-
 }

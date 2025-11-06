@@ -4,10 +4,10 @@ import lombok.Data;
 
 @Data
 public class NewsResponse {
-    private Long id;
-    private String title;
-    private String brief;
-    private String content;
-    private Boolean isDisplay;
-    private String image;
+  private Long id;
+  private String title;
+  private String brief;
+  private String content;
+  private Boolean isDisplay;
+  private String image;
 }

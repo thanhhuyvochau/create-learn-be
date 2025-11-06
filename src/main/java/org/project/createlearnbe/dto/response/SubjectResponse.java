@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class SubjectResponse {
-    private Long id;
-    private String name;
-    private String description;
-    private String iconBase64;
+  private Long id;
+  private String name;
+  private String description;
+  private String iconBase64;
 }

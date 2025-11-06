@@ -8,10 +8,9 @@ import org.project.createlearnbe.entities.Grade;
 import org.project.createlearnbe.mapper.GradeMapper;
 import org.project.createlearnbe.repositories.GradeRepository;
 import org.project.createlearnbe.utils.ImageUtil;
-import org.springframework.stereotype.Service;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +20,9 @@ public class GradeService {
   private final GradeMapper gradeMapper;
 
   public ApiPage<GradeResponse> getAll(Pageable pageable) {
-      Page<Grade> grades = gradeRepository.findAll(pageable);
+    Page<Grade> grades = gradeRepository.findAll(pageable);
 
-      return ApiPage.of(grades.map(gradeMapper::toResponse));
+    return ApiPage.of(grades.map(gradeMapper::toResponse));
   }
 
   public GradeResponse getById(Long id) {

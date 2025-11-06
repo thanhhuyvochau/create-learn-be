@@ -1,5 +1,6 @@
 package org.project.createlearnbe.serivce;
 
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.project.createlearnbe.dto.request.NewsRequest;
 import org.project.createlearnbe.dto.response.NewsResponse;
@@ -10,10 +11,6 @@ import org.project.createlearnbe.utils.UrlUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

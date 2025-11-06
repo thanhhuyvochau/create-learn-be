@@ -1,9 +1,8 @@
 package org.project.createlearnbe.dto.response;
 
+import java.time.Instant;
 import lombok.Data;
 import org.project.createlearnbe.constant.ProcessStatus;
-
-import java.time.Instant;
 
 @Data
 public class RegistrationResponse {

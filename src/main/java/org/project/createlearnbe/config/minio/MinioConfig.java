@@ -13,29 +13,28 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class MinioConfig {
 
-    private final MinioProperties properties;
+  private final MinioProperties properties;
 
-    @Bean
-    public MinioClient minioClient() {
-        return MinioClient.builder()
-                .endpoint(properties.getUrl())
-                .credentials(properties.getAccessKey(), properties.getSecretKey())
-                .build();
-    }
+  @Bean
+  public MinioClient minioClient() {
+    return MinioClient.builder()
+        .endpoint(properties.getUrl())
+        .credentials(properties.getAccessKey(), properties.getSecretKey())
+        .build();
+  }
 
-    @Bean
-    public CommandLineRunner initBucket(MinioClient minioClient) {
-        return args -> {
-            String bucket = properties.getBucket();
-            boolean found = minioClient.bucketExists(
-                    BucketExistsArgs.builder().bucket(bucket).build()
-            );
-            if (!found) {
-                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
-            }
+  @Bean
+  public CommandLineRunner initBucket(MinioClient minioClient) {
+    return args -> {
+      String bucket = properties.getBucket();
+      boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket).build());
+      if (!found) {
+        minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
+      }
 
-            // Set bucket policy to public
-            String policyJson = """
+      // Set bucket policy to public
+      String policyJson =
+          """
                     {
                       "Version":"2012-10-17",
                       "Statement":[
@@ -47,11 +46,11 @@ public class MinioConfig {
                         }
                       ]
                     }
-                    """.formatted(bucket);
+                    """
+              .formatted(bucket);
 
-            minioClient.setBucketPolicy(
-                    SetBucketPolicyArgs.builder().bucket(bucket).config(policyJson).build()
-            );
-        };
-    }
+      minioClient.setBucketPolicy(
+          SetBucketPolicyArgs.builder().bucket(bucket).config(policyJson).build());
+    };
+  }
 }

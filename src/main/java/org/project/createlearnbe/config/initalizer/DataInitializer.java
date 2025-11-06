@@ -1,16 +1,5 @@
 package org.project.createlearnbe.config.initalizer;
 
-import org.project.createlearnbe.config.AppProperties;
-import org.project.createlearnbe.constant.ProcessStatus;
-import org.project.createlearnbe.constant.Role;
-import org.project.createlearnbe.constant.Gender;
-import org.project.createlearnbe.entities.*;
-import org.project.createlearnbe.repositories.*;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.password.PasswordEncoder;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -20,6 +9,16 @@ import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import org.project.createlearnbe.config.AppProperties;
+import org.project.createlearnbe.constant.Gender;
+import org.project.createlearnbe.constant.ProcessStatus;
+import org.project.createlearnbe.constant.Role;
+import org.project.createlearnbe.entities.*;
+import org.project.createlearnbe.repositories.*;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class DataInitializer {

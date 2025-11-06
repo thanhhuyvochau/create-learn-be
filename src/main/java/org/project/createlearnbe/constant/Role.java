@@ -1,6 +1,5 @@
 package org.project.createlearnbe.constant;
 
-import lombok.Data;
 import lombok.Getter;
 
 @Getter

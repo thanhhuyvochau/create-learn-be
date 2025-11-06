@@ -12,8 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class ConsultationService {
@@ -30,7 +28,8 @@ public class ConsultationService {
 
   @Transactional(readOnly = true)
   public ApiPage<ConsultationResponse> getAll(Pageable pageable) {
-    return ApiPage.of(consultationRepository.findAllSortedByStatusAndCreatedAt(pageable).map(mapper::toResponse));
+    return ApiPage.of(
+        consultationRepository.findAllSortedByStatusAndCreatedAt(pageable).map(mapper::toResponse));
   }
 
   @Transactional(readOnly = true)

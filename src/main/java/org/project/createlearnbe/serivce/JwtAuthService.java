@@ -1,5 +1,7 @@
 package org.project.createlearnbe.serivce;
 
+import java.util.HashMap;
+import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 import org.project.createlearnbe.entities.Account;
 import org.project.createlearnbe.repositories.AccountRepository;
@@ -10,20 +12,26 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
-
 @Service
 public class JwtAuthService {
   private final AuthenticationManager authManager;
   private final JwtUtil jwtUtil;
-  private AccountRepository accountRepository;
+  private final AccountRepository accountRepository;
 
   public JwtAuthService(
       AuthenticationManager authManager, JwtUtil jwtUtil, AccountRepository accountRepository) {
     this.authManager = authManager;
     this.jwtUtil = jwtUtil;
     this.accountRepository = accountRepository;
+  }
+
+  private static @NotNull HashMap<String, String> getClaims(Account loginAccount) {
+    HashMap<String, String> claims = new HashMap<>();
+    claims.put("sub", loginAccount.getUsername());
+    claims.put("role", loginAccount.getRole().getCode());
+    claims.put("email", loginAccount.getEmail());
+    claims.put("phone", loginAccount.getPhone());
+    return claims;
   }
 
   public Map<String, String> authenticate(String username, String password) {
@@ -66,14 +74,5 @@ public class JwtAuthService {
     } else {
       throw new RuntimeException("Invalid refresh token");
     }
-  }
-
-  private static @NotNull HashMap<String, String> getClaims(Account loginAccount) {
-    HashMap<String, String> claims = new HashMap<>();
-    claims.put("sub", loginAccount.getUsername());
-    claims.put("role", loginAccount.getRole().getCode());
-    claims.put("email", loginAccount.getEmail());
-    claims.put("phone", loginAccount.getPhone());
-    return claims;
   }
 }

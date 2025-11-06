@@ -9,11 +9,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ConsultationRepository extends JpaRepository<Consultation, Long> {
-    @Query("""
+  @Query(
+      """
       SELECT c FROM Consultation c
       ORDER BY
         CASE WHEN c.status = 'PROCESSING' THEN 0 ELSE 1 END,
         c.status ASC,
         c.createdAt DESC
       """)
-    Page<Consultation> findAllSortedByStatusAndCreatedAt(Pageable pageable);}
+  Page<Consultation> findAllSortedByStatusAndCreatedAt(Pageable pageable);
+}

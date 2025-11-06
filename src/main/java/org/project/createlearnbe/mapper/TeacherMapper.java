@@ -12,19 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 @Mapper(componentModel = "spring")
 public abstract class TeacherMapper {
 
-    @Autowired
-    protected UrlUtils urlUtils;
+  @Autowired protected UrlUtils urlUtils;
 
-    public abstract TeacherResponseDto toDto(Teacher teacher);
+  public abstract TeacherResponseDto toDto(Teacher teacher);
 
-    public abstract Teacher toEntity(TeacherRequestDto dto);
+  public abstract Teacher toEntity(TeacherRequestDto dto);
 
-    public abstract void updateEntityFromDto(TeacherRequestDto dto, @MappingTarget Teacher teacher);
+  public abstract void updateEntityFromDto(TeacherRequestDto dto, @MappingTarget Teacher teacher);
 
-    @AfterMapping
-    protected void afterMapping(Teacher entity, @MappingTarget TeacherResponseDto dto) {
-        dto.setProfileImageUrl(
-                urlUtils.buildAbsolutePath(entity.getProfileImageUrl())
-        );
-    }
+  @AfterMapping
+  protected void afterMapping(Teacher entity, @MappingTarget TeacherResponseDto dto) {
+    dto.setProfileImageUrl(urlUtils.buildAbsolutePath(entity.getProfileImageUrl()));
+  }
 }

@@ -8,9 +8,9 @@ import org.project.createlearnbe.entities.Subject;
 
 @Mapper(componentModel = "spring")
 public interface SubjectMapper {
-    Subject toEntity(SubjectRequest request);
+  Subject toEntity(SubjectRequest request);
 
-    SubjectResponse toResponse(Subject subject);
+  SubjectResponse toResponse(Subject subject);
 
-    void updateEntityFromRequest(SubjectRequest request, @MappingTarget Subject subject);
+  void updateEntityFromRequest(SubjectRequest request, @MappingTarget Subject subject);
 }

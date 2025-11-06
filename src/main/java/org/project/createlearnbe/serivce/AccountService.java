@@ -1,5 +1,6 @@
 package org.project.createlearnbe.serivce;
 
+import java.util.UUID;
 import org.project.createlearnbe.config.http.ApiPage;
 import org.project.createlearnbe.constant.Role;
 import org.project.createlearnbe.dto.request.*;
@@ -14,8 +15,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 public class AccountService {
@@ -119,14 +118,14 @@ public class AccountService {
       account.setActivated(false);
     }
 
-    if(request.getUsername() != null && !request.getUsername().equals(account.getUsername())) {
+    if (request.getUsername() != null && !request.getUsername().equals(account.getUsername())) {
       if (existsByUsername(request.getUsername())) {
         throw new RuntimeException("Username already exists");
       }
       account.setUsername(request.getUsername());
     }
 
-    if(request.getPhone() != null && !request.getPhone().equals(account.getPhone())) {
+    if (request.getPhone() != null && !request.getPhone().equals(account.getPhone())) {
       if (existsByPhone(request.getPhone())) {
         throw new RuntimeException("Phone already exists");
       }
@@ -143,6 +142,7 @@ public class AccountService {
     accountRepository.save(account);
     return "Account updated successfully";
   }
+
   public ApiPage<AccountResponse> getAllAccounts(Pageable pageable) {
     Page<Account> accounts = accountRepository.findAll(pageable);
     return new ApiPage<>(accounts.map(accountMapper::toResponse));

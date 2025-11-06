@@ -8,9 +8,9 @@ import org.project.createlearnbe.entities.News;
 
 @Mapper(componentModel = "spring")
 public interface NewsMapper {
-    News toEntity(NewsRequest request);
+  News toEntity(NewsRequest request);
 
-    NewsResponse toResponse(News entity);
+  NewsResponse toResponse(News entity);
 
-    void updateEntityFromRequest(NewsRequest request, @MappingTarget News entity);
+  void updateEntityFromRequest(NewsRequest request, @MappingTarget News entity);
 }

@@ -1,8 +1,8 @@
 package org.project.createlearnbe.utils;
 
-import org.springframework.web.multipart.MultipartFile;
-import java.util.Base64;
 import java.io.IOException;
+import java.util.Base64;
+import org.springframework.web.multipart.MultipartFile;
 
 public class ImageUtil {
   public static String toBase64(MultipartFile file) {

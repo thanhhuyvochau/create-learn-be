@@ -1,20 +1,18 @@
 package org.project.createlearnbe.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
-
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.project.createlearnbe.config.http.ApiPage;
 import org.project.createlearnbe.config.http.ApiWrapper;
 import org.project.createlearnbe.dto.request.ClassRequest;
 import org.project.createlearnbe.dto.request.GetClassRequest;
 import org.project.createlearnbe.dto.response.ClassResponse;
-import org.project.createlearnbe.dto.response.GradeResponse;
 import org.project.createlearnbe.serivce.ClazzService;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
@@ -22,8 +20,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name = "Class Management", description = "Endpoints for managing and viewing classes")
 @RestController
@@ -43,9 +39,9 @@ public class ClassController {
       description = "Successfully retrieved all classes",
       content = @Content(schema = @Schema(implementation = ApiWrapper.class)))
   @GetMapping("/admin")
-  public ResponseEntity<ApiWrapper<ApiPage<ClassResponse>>>getAllByAdmin(@ParameterObject
-                                                                           @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC)
-                                                                           Pageable pageable) {
+  public ResponseEntity<ApiWrapper<ApiPage<ClassResponse>>> getAllByAdmin(
+      @ParameterObject @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC)
+          Pageable pageable) {
     return ResponseEntity.ok(ApiWrapper.success(clazzService.getAll(pageable)));
   }
 

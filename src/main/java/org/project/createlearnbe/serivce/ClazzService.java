@@ -1,35 +1,26 @@
 package org.project.createlearnbe.serivce;
 
+import jakarta.persistence.EntityNotFoundException;
+import java.math.BigDecimal;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
-import org.project.createlearnbe.config.AppProperties;
 import org.project.createlearnbe.config.http.ApiPage;
-import org.project.createlearnbe.config.minio.MinioProperties;
 import org.project.createlearnbe.dto.request.ClassRequest;
 import org.project.createlearnbe.dto.request.GetClassRequest;
 import org.project.createlearnbe.dto.response.*;
 import org.project.createlearnbe.entities.Clazz;
-import org.project.createlearnbe.entities.Subject;
 import org.project.createlearnbe.entities.Grade;
+import org.project.createlearnbe.entities.Subject;
 import org.project.createlearnbe.entities.Teacher;
-import org.project.createlearnbe.mapper.ClassMapper;
 import org.project.createlearnbe.mapper.ScheduleMapper;
 import org.project.createlearnbe.repositories.ClazzRepository;
-import org.project.createlearnbe.repositories.SubjectRepository;
 import org.project.createlearnbe.repositories.GradeRepository;
+import org.project.createlearnbe.repositories.SubjectRepository;
 import org.project.createlearnbe.repositories.TeacherRepository;
 import org.project.createlearnbe.utils.UrlUtils;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.project.createlearnbe.mapper.ClassMapper;
-
-import jakarta.persistence.EntityNotFoundException;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
