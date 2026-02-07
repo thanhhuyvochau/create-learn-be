@@ -13,6 +13,6 @@ public class UrlUtils {
 
   public String buildAbsolutePath(String relativePath) {
     relativePath = relativePath.startsWith("/") ? relativePath.substring(1) : relativePath;
-    return String.format("%s/%s", minioProperties.getUrl(), relativePath);
+    return String.format("%s/%s", minioProperties.getExternalUrl(), relativePath);
   }
 }
