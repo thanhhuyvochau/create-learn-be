@@ -18,6 +18,7 @@ minio:
   url: http://localhost:9000
   access-key: minioadmin
   secret-key: minioadmin123
+  external-url: http://localhost:9000
 
 app:
   init-mock: true
