@@ -40,8 +40,8 @@ public class DataInitializer {
       ClazzRepository classRepository,
       ScheduleRepository scheduleRepository) {
     return args -> {
+      initAdmin(accountRepository, passwordEncoder); // Always ensure admin exists
       if (appProperties.isInitMock()) {
-        initAdmin(accountRepository, passwordEncoder);
         initSubjects(subjectRepository);
         initGrades(gradeRepository);
         initConsultations(consultationRepository);
