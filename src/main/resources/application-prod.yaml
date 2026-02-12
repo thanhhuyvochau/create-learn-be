@@ -30,7 +30,7 @@ minio:
   access-key: minioadmin
   secret-key: minioadmin123
   bucket: create-learn-storage
-  external-url: http://76.13.181.170:9000
+  external-url: https://algocore.education/resource
 
 app:
   init-mock: false
