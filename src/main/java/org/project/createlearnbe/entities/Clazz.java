@@ -2,7 +2,7 @@ package org.project.createlearnbe.entities;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import lombok.Data;
 import org.hibernate.annotations.Where;
@@ -58,5 +58,5 @@ public class Clazz {
   @Column(nullable = false)
   private Boolean isDeleted = false;
 
-  private LocalDateTime deletedAt;
+  private Instant deletedAt;
 }

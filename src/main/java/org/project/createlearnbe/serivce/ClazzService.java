@@ -2,7 +2,7 @@ package org.project.createlearnbe.serivce;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.project.createlearnbe.config.http.ApiPage;
@@ -74,7 +74,7 @@ public class ClazzService {
             .findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Class not found with id: " + id));
     clazz.setIsDeleted(true);
-    clazz.setDeletedAt(LocalDateTime.now());
+    clazz.setDeletedAt(Instant.now());
     clazzRepository.save(clazz);
   }
 
