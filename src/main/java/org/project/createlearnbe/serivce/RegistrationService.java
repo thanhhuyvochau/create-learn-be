@@ -83,11 +83,24 @@ public class RegistrationService {
     registrationRepository.deleteById(id);
   }
 
+  public void markRegistrationsAsClassDeleted(Long clazzId) {
+    registrationRepository.findAll().stream()
+        .filter(r -> r.getClazz().getId().equals(clazzId))
+        .forEach(r -> {
+          r.setStatus(ProcessStatus.CLASS_DELETED);
+          registrationRepository.save(r);
+        });
+  }
+
   public RegistrationResponse getById(Long id) {
-    return registrationRepository
-        .findById(id)
-        .map(this::toResponse)
-        .orElseThrow(() -> new RuntimeException("Registration not found with id " + id));
+    Registration registration =
+        registrationRepository
+            .findById(id)
+            .orElseThrow(() -> new RuntimeException("Registration not found with id " + id));
+    if (registration.getStatus() == ProcessStatus.CLASS_DELETED) {
+      throw new RuntimeException("Registration not found with id " + id);
+    }
+    return toResponse(registration);
   }
 
   public Page<RegistrationResponse> getAll(Pageable pageable) {

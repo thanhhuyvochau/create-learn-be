@@ -33,6 +33,7 @@ public class ClazzService {
   private final TeacherRepository teacherRepository;
   private final UrlUtils urlUtils;
   private final ScheduleMapper scheduleMapper;
+  private final RegistrationService registrationService;
 
   public ApiPage<ClassResponse> getAll(Pageable pageable) {
     Page<Clazz> classes = clazzRepository.findAll(pageable);
@@ -76,6 +77,8 @@ public class ClazzService {
     clazz.setIsDeleted(true);
     clazz.setDeletedAt(Instant.now());
     clazzRepository.save(clazz);
+    // Mark all registrations for this class as CLASS_DELETED
+    registrationService.markRegistrationsAsClassDeleted(id);
   }
 
   private void mapRequestToEntity(ClassRequest request, Clazz clazz) {
