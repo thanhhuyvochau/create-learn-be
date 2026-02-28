@@ -85,11 +85,12 @@ public class RegistrationService {
 
   public void markRegistrationsAsClassDeleted(Long clazzId) {
     registrationRepository.findAll().stream()
-        .filter(r -> r.getClazz().getId().equals(clazzId))
-        .forEach(r -> {
-          r.setStatus(ProcessStatus.CLASS_DELETED);
-          registrationRepository.save(r);
-        });
+        .filter(r -> clazzId.equals(r.getClazz().getId()))
+        .forEach(
+            r -> {
+              r.setStatus(ProcessStatus.CLASS_DELETED);
+              registrationRepository.save(r);
+            });
   }
 
   public RegistrationResponse getById(Long id) {
