@@ -17,7 +17,7 @@ public class FileStorageService {
   private final MinioClient minioClient;
   private final MinioProperties properties;
 
-  public String uploadFile(MultipartFile file) {
+  public String uploadImage(MultipartFile file) {
     String objectName = UUID.randomUUID() + "-" + file.getOriginalFilename();
 
     try (InputStream is = file.getInputStream()) {

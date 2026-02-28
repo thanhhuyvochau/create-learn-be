@@ -1,6 +1,7 @@
 package org.project.createlearnbe.config.exception;
 
 import org.project.createlearnbe.config.exception.types.EmailDuplicateException;
+import org.project.createlearnbe.config.exception.types.InvalidFileTypeException;
 import org.project.createlearnbe.config.exception.types.PhoneDuplicateException;
 import org.project.createlearnbe.config.exception.types.UserNameDuplicateException;
 import org.project.createlearnbe.config.http.ApiWrapper;
@@ -43,6 +44,11 @@ public class RestExceptionHandler {
     PhoneDuplicateException.class
   })
   public ResponseEntity<Object> handleUserException(Exception ex) {
+    return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
+  }
+
+  @ExceptionHandler(InvalidFileTypeException.class)
+  public ResponseEntity<Object> handleInvalidFileTypeException(InvalidFileTypeException ex) {
     return buildResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
   }
 
