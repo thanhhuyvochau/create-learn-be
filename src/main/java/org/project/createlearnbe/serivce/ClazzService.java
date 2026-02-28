@@ -2,6 +2,7 @@ package org.project.createlearnbe.serivce;
 
 import jakarta.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.project.createlearnbe.config.http.ApiPage;
@@ -43,6 +44,9 @@ public class ClazzService {
         clazzRepository
             .findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Class not found with id: " + id));
+    if (clazz.getIsDeleted()) {
+      throw new EntityNotFoundException("Class not found with id: " + id);
+    }
     return toResponse(clazz);
   }
 
@@ -57,15 +61,21 @@ public class ClazzService {
         clazzRepository
             .findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Class not found with id: " + id));
+    if (clazz.getIsDeleted()) {
+      throw new EntityNotFoundException("Class not found with id: " + id);
+    }
     mapRequestToEntity(request, clazz);
     return toResponse(clazzRepository.save(clazz));
   }
 
   public void delete(Long id) {
-    if (!clazzRepository.existsById(id)) {
-      throw new EntityNotFoundException("Class not found with id: " + id);
-    }
-    clazzRepository.deleteById(id);
+    Clazz clazz =
+        clazzRepository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Class not found with id: " + id));
+    clazz.setIsDeleted(true);
+    clazz.setDeletedAt(LocalDateTime.now());
+    clazzRepository.save(clazz);
   }
 
   private void mapRequestToEntity(ClassRequest request, Clazz clazz) {

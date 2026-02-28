@@ -14,7 +14,8 @@ public interface ClazzRepository extends JpaRepository<Clazz, Long> {
   @Query(
       """
           SELECT c FROM Clazz c
-          WHERE c.isDisplayed = true
+          WHERE c.isDeleted = false
+            AND c.isDisplayed = true
             AND (:isFree = false OR c.price = 0)
             AND (:gradeId IS NULL OR EXISTS (
                   SELECT g FROM c.grades g WHERE g.id = :gradeId

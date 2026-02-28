@@ -2,11 +2,14 @@ package org.project.createlearnbe.entities;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Data;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "clazz")
+@Where(clause = "is_deleted = false")
 @Data
 public class Clazz {
   @Id
@@ -51,4 +54,9 @@ public class Clazz {
 
   @OneToMany(mappedBy = "clazz", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<Schedule> schedules;
+
+  @Column(nullable = false)
+  private Boolean isDeleted = false;
+
+  private LocalDateTime deletedAt;
 }
