@@ -45,7 +45,7 @@ public class Clazz {
   private List<Grade> grades;
 
   @ManyToOne
-  @JoinColumn(name = "teacher_id")
+  @JoinColumn(name = "teacher_id", nullable = true) // nullable - classes can exist without an assigned teacher
   private Teacher teacher;
 
   private Boolean isDisplayed = true;

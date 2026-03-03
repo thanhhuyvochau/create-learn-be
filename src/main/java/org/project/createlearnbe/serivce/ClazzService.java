@@ -109,6 +109,8 @@ public class ClazzService {
                       new EntityNotFoundException(
                           "Teacher not found with id: " + request.getTeacherId()));
       clazz.setTeacher(teacher);
+    } else {
+      clazz.setTeacher(null);
     }
   }
 
