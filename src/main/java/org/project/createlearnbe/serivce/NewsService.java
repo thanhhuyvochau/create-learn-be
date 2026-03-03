@@ -54,7 +54,7 @@ public class NewsService {
         newsRepository
             .findById(id)
             .orElseThrow(() -> new RuntimeException("News not found with id: " + id));
-    newsMapper.updateEntityFromRequest(request, news);
+    updateEntityFromRequest(request, news);
     NewsResponse response = newsMapper.toResponse(newsRepository.save(news));
     response.setImage(this.urlUtils.buildAbsolutePath(news.getImage()));
     return response;
@@ -66,6 +66,16 @@ public class NewsService {
             .findById(id)
             .orElseThrow(() -> new RuntimeException("News not found with id: " + id));
     newsRepository.delete(news);
+  }
+
+  private void updateEntityFromRequest(NewsRequest request, News entity) {
+    entity.setTitle(request.getTitle());
+    entity.setBrief(request.getBrief());
+    entity.setContent(request.getContent());
+    entity.setIsDisplay(request.getIsDisplay());
+    if (request.getImage() != null && !request.getImage().isEmpty()) {
+      entity.setImage(this.urlUtils.stripMinioExternalUrl(request.getImage()));
+    }
   }
 
   public Page<NewsResponse> getAllVisibleNews(Pageable pageable) {

@@ -24,4 +24,11 @@ public abstract class TeacherMapper {
   protected void afterMapping(Teacher entity, @MappingTarget TeacherResponseDto dto) {
     dto.setProfileImageUrl(urlUtils.buildAbsolutePath(entity.getProfileImageUrl()));
   }
+
+  @AfterMapping
+  protected void stripImageUrlOnUpdate(TeacherRequestDto dto, @MappingTarget Teacher entity) {
+    if (dto.profileImageUrl() != null && !dto.profileImageUrl().isEmpty()) {
+      entity.setProfileImageUrl(urlUtils.stripMinioExternalUrl(dto.profileImageUrl()));
+    }
+  }
 }

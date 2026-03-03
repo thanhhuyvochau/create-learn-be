@@ -85,7 +85,7 @@ public class ClazzService {
     clazz.setName(request.getName());
     clazz.setBrief(request.getBrief());
     clazz.setDescription(request.getDescription());
-    clazz.setImage(request.getImage());
+    clazz.setImage(urlUtils.stripMinioExternalUrl(request.getImage()));
     clazz.setRequirement(request.getRequirement());
     clazz.setGuarantee(request.getGuarantee());
     clazz.setIsDisplayed(request.getIsDisplayed());
