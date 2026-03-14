@@ -40,6 +40,21 @@ public class SubjectController {
   }
 
   @Operation(
+      summary = "Get subject by ID",
+      description = "Retrieves a specific subject by its unique identifier.")
+  @ApiResponses({
+    @ApiResponse(
+        responseCode = "200",
+        description = "Subject retrieved successfully",
+        content = @Content(schema = @Schema(implementation = SubjectResponse.class))),
+    @ApiResponse(responseCode = "404", description = "Subject not found")
+  })
+  @GetMapping("/{id}")
+  public ResponseEntity<ApiWrapper<SubjectResponse>> getSubjectById(@PathVariable Long id) {
+    return ResponseEntity.ok(ApiWrapper.success(subjectService.getById(id)));
+  }
+
+  @Operation(
       summary = "Create a new subject",
       description =
           "Creates a new subject with an uploaded icon image. Accepts multipart/form-data.")

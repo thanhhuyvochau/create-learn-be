@@ -1,6 +1,7 @@
 package org.project.createlearnbe.serivce;
 
 import lombok.RequiredArgsConstructor;
+import org.project.createlearnbe.config.exception.types.ResourceNotFoundException;
 import org.project.createlearnbe.config.http.ApiPage;
 import org.project.createlearnbe.dto.request.SubjectRequest;
 import org.project.createlearnbe.dto.response.SubjectResponse;
@@ -22,6 +23,12 @@ public class SubjectService {
   public ApiPage<SubjectResponse> getAll(Pageable pageable) {
     Page<Subject> subjects = subjectRepository.findAll(pageable);
     return ApiPage.of(subjects.map(subjectMapper::toResponse));
+  }
+
+  public SubjectResponse getById(Long id) {
+    Subject subject = subjectRepository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Subject not found with id: " + id));
+    return subjectMapper.toResponse(subject);
   }
 
   public SubjectResponse create(SubjectRequest request) {

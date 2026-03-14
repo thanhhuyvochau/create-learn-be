@@ -3,6 +3,7 @@ package org.project.createlearnbe.config.exception;
 import org.project.createlearnbe.config.exception.types.EmailDuplicateException;
 import org.project.createlearnbe.config.exception.types.InvalidFileTypeException;
 import org.project.createlearnbe.config.exception.types.PhoneDuplicateException;
+import org.project.createlearnbe.config.exception.types.ResourceNotFoundException;
 import org.project.createlearnbe.config.exception.types.UserNameDuplicateException;
 import org.project.createlearnbe.config.http.ApiWrapper;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,12 @@ public class RestExceptionHandler {
             });
     return ResponseEntity.badRequest()
         .body(ApiWrapper.error(errorMessages.toString().trim(), HttpStatus.BAD_REQUEST.value()));
+  }
+
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+        .body(ApiWrapper.error(ex.getMessage(), HttpStatus.NOT_FOUND.value()));
   }
 
   @ExceptionHandler(Exception.class)
