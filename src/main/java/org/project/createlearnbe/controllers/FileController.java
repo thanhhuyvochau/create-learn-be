@@ -20,9 +20,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class FileController {
 
-  private static final Set<String> ALLOWED_IMAGE_EXTENSIONS = new HashSet<>(
-      Arrays.asList("png", "jpg", "jpeg", "gif", "webp")
-  );
+  private static final Set<String> ALLOWED_IMAGE_EXTENSIONS =
+      new HashSet<>(Arrays.asList("png", "jpg", "jpeg", "gif", "webp"));
   private static final long MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
   private static final String ALLOWED_EXTENSIONS_STRING = "png, jpg, jpeg, gif, webp";
 
@@ -38,26 +37,25 @@ public class FileController {
   private void validateFile(MultipartFile file) {
     // Check if file is empty
     if (file.isEmpty()) {
-      throw new InvalidFileTypeException("File cannot be empty");
+      throw new InvalidFileTypeException("Tệp tin không được để trống");
     }
 
-    // Check file size
     if (file.getSize() > MAX_FILE_SIZE) {
-      throw new InvalidFileTypeException("File size exceeds maximum allowed size of 10MB");
+      throw new InvalidFileTypeException("Kích thước tệp vượt quá giới hạn cho phép là 10MB");
     }
 
-    // Check file extension
     String fileName = file.getOriginalFilename();
     if (fileName == null || fileName.isEmpty()) {
-      throw new InvalidFileTypeException("File name is invalid");
+      throw new InvalidFileTypeException("Tên tệp không hợp lệ");
     }
 
     String fileExtension = getFileExtension(fileName).toLowerCase();
     if (!ALLOWED_IMAGE_EXTENSIONS.contains(fileExtension)) {
       throw new InvalidFileTypeException(
-          "Invalid file type. File extension '" + fileExtension
-              + "' is not allowed. Allowed types: " + ALLOWED_EXTENSIONS_STRING
-      );
+          "Loại tệp không hợp lệ. "
+              + fileExtension
+              + " không được phép. Các loại tệp được chấp nhận: "
+              + ALLOWED_EXTENSIONS_STRING);
     }
   }
 
