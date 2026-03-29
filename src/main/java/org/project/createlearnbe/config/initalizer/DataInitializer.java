@@ -6,11 +6,14 @@ import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import org.project.createlearnbe.config.AppProperties;
+import org.project.createlearnbe.constant.BadgeVariant;
 import org.project.createlearnbe.constant.Gender;
+import org.project.createlearnbe.constant.JobType;
 import org.project.createlearnbe.constant.ProcessStatus;
 import org.project.createlearnbe.constant.Role;
 import org.project.createlearnbe.entities.*;
@@ -38,7 +41,8 @@ public class DataInitializer {
       NewsRepository newsRepository,
       PasswordEncoder passwordEncoder,
       ClazzRepository classRepository,
-      ScheduleRepository scheduleRepository) {
+      ScheduleRepository scheduleRepository,
+      JobPostingRepository jobPostingRepository) {
     return args -> {
       initAdmin(accountRepository, passwordEncoder); // Always ensure admin exists
       if (appProperties.isInitMock()) {
@@ -53,6 +57,7 @@ public class DataInitializer {
             gradeRepository,
             teacherRepository,
             scheduleRepository);
+        initJobPostings(jobPostingRepository);
       }
     };
   }
@@ -369,6 +374,209 @@ public class DataInitializer {
     schedule.setTime(time);
     schedule.setClazz(clazz);
     return schedule;
+  }
+
+  private void initJobPostings(JobPostingRepository jobPostingRepository) {
+    if (jobPostingRepository.count() == 0) {
+      List<JobPosting> postings = new ArrayList<>();
+
+      // Job 1 — Senior Algorithmic Instructor
+      JobPosting job1 = new JobPosting();
+      job1.setTitle("Senior Algorithmic Instructor");
+      job1.setDepartment("Mathematics");
+      job1.setLocation("Cambridge (Hybrid)");
+      job1.setBadgeVariant(BadgeVariant.SECONDARY);
+      job1.setType(JobType.FULL_TIME);
+      job1.setDescription(List.of(
+          "AlgoCore Education đang tìm kiếm một Giảng Viên Thuật Toán Cấp Cao xuất sắc để gia nhập đội ngũ giảng viên học thuật tinh hoa của chúng tôi. Vị trí này dành cho những nhà giáo dục có tầm nhìn, với niềm đam mê sâu sắc về lý thuyết toán học và năng lực sư phạm để truyền cảm hứng cho thế hệ các nhà tư duy thuật toán tiếp theo.",
+          "Với tư cách là Giảng Viên Cấp Cao, bạn không chỉ dẫn dắt các buổi giảng dạy cấp cao mà còn đóng góp vào sự phát triển liên tục của chương trình học độc quyền của chúng tôi. Bạn sẽ làm việc tại giao điểm giữa sự nghiêm túc học thuật truyền thống và các ứng dụng tính toán hiện đại."
+      ));
+      job1.setRequirements(List.of(
+          "Bằng Thạc Sĩ hoặc Tiến Sĩ chuyên ngành Toán học, Khoa học Máy tính hoặc lĩnh vực liên quan từ trường đại học được công nhận toàn cầu.",
+          "Tối thiểu 7 năm kinh nghiệm giảng dạy, ưu tiên trong môi trường trung học hoặc đại học có kết quả học tập cao.",
+          "Thành thạo Python, MATLAB hoặc Mathematica cho mục đích giảng dạy.",
+          "Kỹ năng giao tiếp xuất sắc với khả năng chuyển hóa các khái niệm trừu tượng phức tạp thành kết quả học tập dễ tiếp thu."
+      ));
+      job1.setDeadline("Oct 15, 2025");
+      job1.setRecruiter("Academic HR Team");
+      job1.setReference("#STEM-ALG-2025");
+      addResponsibilities(job1, List.of(
+          new String[]{"menu_book", "Xuất Sắc Về Chương Trình Học", "Dẫn dắt việc phát triển và hoàn thiện các học phần Thuật Toán Nâng Cao và Toán Học Rời Rạc."},
+          new String[]{"group", "Hướng Dẫn & Cố Vấn", "Cung cấp huấn luyện sư phạm và phát triển chuyên môn cho các giảng viên trẻ."},
+          new String[]{"insights", "Theo Dõi Kết Quả Học Tập", "Sử dụng nền tảng phân tích của AlgoCore để theo dõi tiến trình của học viên và điều chỉnh lộ trình học tập."},
+          new String[]{"hub", "Phối Hợp Liên Ngành", "Hợp tác với bộ phận Khoa Học Máy Tính để tích hợp các chứng minh toán học vào các dự án lập trình."}
+      ));
+      addBenefits(job1, List.of(
+          new String[]{"payments", "Mức Lương Cạnh Tranh", "Lương ở mức cao so với thị trường kèm theo thưởng học thuật dựa trên hiệu suất."},
+          new String[]{"rocket_launch", "Hỗ Trợ Nghiên Cứu", "Ngân sách hàng năm dành riêng cho việc xuất bản học thuật và tham dự hội nghị."},
+          new String[]{"favorite", "Chăm Sóc Sức Khỏe Toàn Diện", "Bảo hiểm y tế tư nhân cao cấp và các chương trình sức khỏe tâm thần được trợ cấp hoàn toàn."},
+          new String[]{"home", "Môi Trường Linh Hoạt", "Mô hình làm việc kết hợp tập trung vào kết quả thay vì hiện diện vật lý."}
+      ));
+      postings.add(job1);
+
+      // Job 2 — Full Stack Developer (LMS)
+      JobPosting job2 = new JobPosting();
+      job2.setTitle("Full Stack Developer (LMS)");
+      job2.setDepartment("Coding");
+      job2.setLocation("Remote / London");
+      job2.setBadgeVariant(BadgeVariant.PRIMARY);
+      job2.setType(JobType.FULL_TIME);
+      job2.setDescription(List.of(
+          "Chúng tôi đang tìm kiếm một Lập Trình Viên Full Stack có kỹ năng để giúp xây dựng và duy trì Hệ Thống Quản Lý Học Tập (LMS). Bạn sẽ làm việc chặt chẽ với các nhà giáo dục và nhà thiết kế sản phẩm để cung cấp trải nghiệm học tập số liền mạch."
+      ));
+      job2.setRequirements(List.of(
+          "Bằng Cử Nhân chuyên ngành Khoa Học Máy Tính hoặc kinh nghiệm thực tế tương đương.",
+          "Thành thạo TypeScript, Angular hoặc React và Node.js.",
+          "Kinh nghiệm với cơ sở dữ liệu quan hệ và thiết kế REST API."
+      ));
+      job2.setDeadline("Nov 1, 2025");
+      job2.setRecruiter("Tech Hiring Team");
+      job2.setReference("#TECH-FSD-2025");
+      addResponsibilities(job2, List.of(
+          new String[]{"code", "Phát Triển Tính Năng", "Xây dựng và triển khai các tính năng LMS mới trên toàn bộ hệ thống sử dụng công nghệ web hiện đại."},
+          new String[]{"bug_report", "Đảm Bảo Chất Lượng", "Viết các bài kiểm tra đơn vị và tích hợp, đồng thời tham gia vào quy trình đánh giá mã nguồn."}
+      ));
+      addBenefits(job2, List.of(
+          new String[]{"payments", "Mức Lương Cạnh Tranh", "Lương theo thị trường với đánh giá hiệu suất hàng năm."},
+          new String[]{"home", "Ưu Tiên Làm Từ Xa", "Làm việc từ bất cứ đâu với giờ làm việc linh hoạt."}
+      ));
+      postings.add(job2);
+
+      // Job 3 — Student Success Lead
+      JobPosting job3 = new JobPosting();
+      job3.setTitle("Student Success Lead");
+      job3.setDepartment("Admissions");
+      job3.setLocation("Remote");
+      job3.setBadgeVariant(BadgeVariant.TERTIARY);
+      job3.setType(JobType.FULL_TIME);
+      job3.setDescription(List.of(
+          "Trưởng Nhóm Hỗ Trợ Học Viên sẽ là người đồng hành cùng học viên trong toàn bộ hành trình từ lúc nhập học đến khi tốt nghiệp, đảm bảo mỗi người học đều có sự hỗ trợ cần thiết để phát triển."
+      ));
+      job3.setRequirements(List.of(
+          "Kinh nghiệm đã được chứng minh trong lĩnh vực dịch vụ sinh viên, tư vấn học tập hoặc vai trò liên quan.",
+          "Khả năng giao tiếp đồng cảm với kỹ năng tổ chức tốt."
+      ));
+      job3.setDeadline("Oct 30, 2025");
+      job3.setRecruiter("People & Culture Team");
+      job3.setReference("#ADM-SSL-2025");
+      addResponsibilities(job3, List.of(
+          new String[]{"support_agent", "Hỗ Trợ Học Viên", "Là đầu mối liên hệ chính cho các vấn đề về phúc lợi và học tập của học viên."},
+          new String[]{"insights", "Phân Tích Tỷ Lệ Duy Trì", "Theo dõi các chỉ số tương tác và chủ động liên hệ với những học viên có nguy cơ bỏ học."}
+      ));
+      addBenefits(job3, List.of(
+          new String[]{"favorite", "Gói Phúc Lợi Sức Khỏe", "Phúc lợi sức khỏe và thể chất toàn diện."},
+          new String[]{"home", "Hoàn Toàn Từ Xa", "Làm việc từ nơi bạn năng suất nhất."}
+      ));
+      postings.add(job3);
+
+      // Job 4 — Curriculum Designer (Python)
+      JobPosting job4 = new JobPosting();
+      job4.setTitle("Curriculum Designer (Python)");
+      job4.setDepartment("Coding");
+      job4.setLocation("Remote");
+      job4.setBadgeVariant(BadgeVariant.PRIMARY);
+      job4.setType(JobType.CONTRACT);
+      job4.setDescription(List.of(
+          "Chúng tôi đang tìm kiếm một Nhà Thiết Kế Chương Trình Học có kinh nghiệm để xây dựng các tài liệu học Python hấp dẫn, phù hợp với chuẩn mực cho học sinh trung học và sau trung học."
+      ));
+      job4.setRequirements(List.of(
+          "Kỹ năng lập trình Python vững chắc và kinh nghiệm giảng dạy hoặc gia sư.",
+          "Nền tảng về thiết kế giảng dạy hoặc lĩnh vực giáo dục liên quan được ưu tiên."
+      ));
+      job4.setDeadline("Dec 1, 2025");
+      job4.setRecruiter("Curriculum Team");
+      job4.setReference("#CUR-PYD-2025");
+      addResponsibilities(job4, List.of(
+          new String[]{"menu_book", "Sáng Tạo Nội Dung", "Thiết kế giáo án, bài tập và dự án cho các khóa học Python ở nhiều cấp độ kỹ năng khác nhau."},
+          new String[]{"group", "Hợp Tác Với Giảng Viên", "Phối hợp với giảng viên để cải tiến nội dung dựa trên phản hồi của học viên."}
+      ));
+      addBenefits(job4, List.of(
+          new String[]{"rocket_launch", "Tự Do Sáng Tạo", "Quyền tự chủ đáng kể trong việc định hướng và cấu trúc nội dung."},
+          new String[]{"payments", "Mức Thù Lao Hợp Đồng Cạnh Tranh", "Mức thù lao theo giờ hoặc theo dự án tương xứng với kinh nghiệm."}
+      ));
+      postings.add(job4);
+
+      // Job 5 — Academic Research Fellow
+      JobPosting job5 = new JobPosting();
+      job5.setTitle("Academic Research Fellow");
+      job5.setDepartment("Mathematics");
+      job5.setLocation("San Francisco");
+      job5.setBadgeVariant(BadgeVariant.SECONDARY);
+      job5.setType(JobType.FULL_TIME);
+      job5.setDescription(List.of(
+          "Nghiên Cứu Sinh Học Thuật sẽ đóng góp vào công trình nghiên cứu sư phạm ngày càng phát triển của AlgoCore, khám phá giao điểm giữa giáo dục toán học và tư duy tính toán."
+      ));
+      job5.setRequirements(List.of(
+          "Bằng Tiến Sĩ chuyên ngành Toán học, Giáo dục hoặc lĩnh vực liên quan.",
+          "Hồ sơ xuất bản vững chắc trong lĩnh vực nghiên cứu giáo dục toán học hoặc STEM."
+      ));
+      job5.setDeadline("Jan 15, 2026");
+      job5.setRecruiter("Research Office");
+      job5.setReference("#RES-ARF-2025");
+      addResponsibilities(job5, List.of(
+          new String[]{"science", "Nghiên Cứu", "Tiến hành các nghiên cứu độc lập và cộng tác trong lĩnh vực giáo dục toán học."},
+          new String[]{"menu_book", "Xuất Bản", "Biên soạn và đồng tác giả các bài báo cho các tạp chí được bình duyệt và hội nghị khoa học."}
+      ));
+      addBenefits(job5, List.of(
+          new String[]{"rocket_launch", "Ngân Sách Nghiên Cứu", "Khoản phân bổ hàng năm hào phóng cho hội nghị và xuất bản."},
+          new String[]{"payments", "Học Bổng Nghiên Cứu", "Học bổng cạnh tranh kèm phụ cấp nhà ở cho các nghiên cứu sinh tại San Francisco."}
+      ));
+      postings.add(job5);
+
+      // Jobs 6–11 — minimal stubs (same department/location as job 5)
+      String[][] stubs = {
+          {"#RES-ARF-2025-B"},
+          {"#RES-ARF-2025-C"},
+          {"#RES-ARF-2025-D"},
+          {"#RES-ARF-2025-E"},
+          {"#RES-ARF-2025-F"},
+          {"#RES-ARF-2025-G"},
+      };
+      for (String[] stub : stubs) {
+        JobPosting j = new JobPosting();
+        j.setTitle("Academic Research Fellow");
+        j.setDepartment("Mathematics");
+        j.setLocation("San Francisco");
+        j.setBadgeVariant(BadgeVariant.SECONDARY);
+        j.setType(JobType.FULL_TIME);
+        j.setDescription(List.of("Vị trí nghiên cứu sinh tập trung vào giáo dục toán học thuật toán."));
+        j.setDeadline("Jan 15, 2026");
+        j.setRecruiter("Research Office");
+        j.setReference(stub[0]);
+        postings.add(j);
+      }
+
+      jobPostingRepository.saveAll(postings);
+      System.out.println("Inserted default job postings into database.");
+    } else {
+      System.out.println("Job postings already initialized, skipping.");
+    }
+  }
+
+  private void addResponsibilities(JobPosting posting, List<String[]> items) {
+    for (int i = 0; i < items.size(); i++) {
+      String[] item = items.get(i);
+      JobResponsibility r = new JobResponsibility();
+      r.setIcon(item[0]);
+      r.setTitle(item[1]);
+      r.setBody(item[2]);
+      r.setDisplayOrder(i);
+      r.setJobPosting(posting);
+      posting.getResponsibilities().add(r);
+    }
+  }
+
+  private void addBenefits(JobPosting posting, List<String[]> items) {
+    for (int i = 0; i < items.size(); i++) {
+      String[] item = items.get(i);
+      JobBenefit b = new JobBenefit();
+      b.setIcon(item[0]);
+      b.setTitle(item[1]);
+      b.setBody(item[2]);
+      b.setDisplayOrder(i);
+      b.setJobPosting(posting);
+      posting.getBenefits().add(b);
+    }
   }
 
   private String encodeImageToBase64(String resourcePath) {
