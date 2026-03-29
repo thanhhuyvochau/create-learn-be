@@ -26,8 +26,10 @@ public class JobPostingController {
 
   // ── Public endpoints ─────────────────────────────────────────────────────
 
-  @Operation(summary = "Get all active job postings (public)",
-      description = "Paginated list of active postings. Optionally filter by department or location.")
+  @Operation(
+      summary = "Get all active job postings (public)",
+      description =
+          "Paginated list of active postings. Optionally filter by department or location.")
   @GetMapping("/public")
   public ResponseEntity<ApiWrapper<ApiPage<JobPostingResponse>>> getPublic(
       @RequestParam(required = false) String department,
@@ -35,7 +37,8 @@ public class JobPostingController {
       @ParameterObject @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC)
           Pageable pageable) {
     return ResponseEntity.ok(
-        ApiWrapper.success(ApiPage.of(jobPostingService.getPublic(department, location, pageable))));
+        ApiWrapper.success(
+            ApiPage.of(jobPostingService.getPublic(department, location, pageable))));
   }
 
   @Operation(summary = "Get a single active job posting by id (public)")
@@ -46,7 +49,8 @@ public class JobPostingController {
 
   // ── Admin endpoints ───────────────────────────────────────────────────────
 
-  @Operation(summary = "Get all job postings (admin)",
+  @Operation(
+      summary = "Get all job postings (admin)",
       description = "Returns all non-deleted postings including inactive ones.")
   @GetMapping("/admin")
   public ResponseEntity<ApiWrapper<ApiPage<JobPostingResponse>>> getAllAdmin(
@@ -66,8 +70,7 @@ public class JobPostingController {
   @Operation(summary = "Update an existing job posting")
   @PutMapping("/{id}")
   public ResponseEntity<ApiWrapper<JobPostingResponse>> update(
-      @PathVariable Long id,
-      @Valid @RequestBody JobPostingRequest request) {
+      @PathVariable Long id, @Valid @RequestBody JobPostingRequest request) {
     return ResponseEntity.ok(ApiWrapper.success(jobPostingService.update(id, request)));
   }
 
@@ -76,5 +79,14 @@ public class JobPostingController {
   public ResponseEntity<ApiWrapper<String>> delete(@PathVariable Long id) {
     jobPostingService.delete(id);
     return ResponseEntity.ok(ApiWrapper.success("Job posting deleted successfully"));
+  }
+
+  @Operation(
+      summary = "Get job postings by id",
+      description = "Returns a single job posting by id, including inactive ones for admin.")
+  @GetMapping("/{id}")
+  public ResponseEntity<ApiWrapper<JobPostingResponse>> getJobPostById(
+      @PathVariable("id") Long id) {
+    return ResponseEntity.ok(ApiWrapper.success(jobPostingService.getById(id)));
   }
 }
