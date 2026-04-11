@@ -13,7 +13,10 @@ import org.project.createlearnbe.config.http.ApiWrapper;
 import org.project.createlearnbe.dto.request.ConsultationRequest;
 import org.project.createlearnbe.dto.response.ConsultationResponse;
 import org.project.createlearnbe.serivce.ConsultationService;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,8 +56,11 @@ public class ConsultationController {
       description = "Successfully retrieved all consultations",
       content = @Content(schema = @Schema(implementation = ConsultationResponse.class)))
   @GetMapping
-  public ResponseEntity<ApiWrapper<ApiPage<ConsultationResponse>>> getAll(Pageable pageable) {
-    return ResponseEntity.ok(ApiWrapper.success(consultationService.getAll(pageable)));
+  public ResponseEntity<ApiWrapper<ApiPage<ConsultationResponse>>> getAll(
+      @RequestParam(required = false) String search,
+      @ParameterObject @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC)
+          Pageable pageable) {
+    return ResponseEntity.ok(ApiWrapper.success(consultationService.getAll(search, pageable)));
   }
 
   @Operation(

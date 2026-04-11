@@ -104,7 +104,10 @@ public class RegistrationService {
     return toResponse(registration);
   }
 
-  public Page<RegistrationResponse> getAll(Pageable pageable) {
-    return registrationRepository.findAllSortedByStatusAndCreatedAt(pageable).map(this::toResponse);
+  public Page<RegistrationResponse> getAll(String search, Pageable pageable) {
+    return (search != null && !search.isBlank()
+            ? registrationRepository.findBySearch(search, pageable)
+            : registrationRepository.findAllSortedByStatusAndCreatedAt(pageable))
+        .map(this::toResponse);
   }
 }

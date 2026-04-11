@@ -72,9 +72,10 @@ public class TeacherController {
       content = @Content(schema = @Schema(implementation = TeacherResponseDto.class)))
   @GetMapping
   public ResponseEntity<ApiWrapper<ApiPage<TeacherResponseDto>>> getAllTeachers(
+      @RequestParam(required = false) String search,
       @ParameterObject @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC)
           Pageable pageable) {
-    return ResponseEntity.ok(ApiWrapper.success(teacherService.getAllTeachers(pageable)));
+    return ResponseEntity.ok(ApiWrapper.success(teacherService.getAllTeachers(search, pageable)));
   }
 
   @Operation(

@@ -12,7 +12,10 @@ import org.project.createlearnbe.config.http.ApiWrapper;
 import org.project.createlearnbe.dto.request.NewsRequest;
 import org.project.createlearnbe.dto.response.NewsResponse;
 import org.project.createlearnbe.serivce.NewsService;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,8 +35,11 @@ public class NewsController {
       description = "List of news retrieved successfully",
       content = @Content(schema = @Schema(implementation = NewsResponse.class)))
   @GetMapping("/admin")
-  public ResponseEntity<ApiWrapper<ApiPage<NewsResponse>>> getAllNews(Pageable pageable) {
-    return ResponseEntity.ok(ApiWrapper.success(ApiPage.of(newsService.getAllNews(pageable))));
+  public ResponseEntity<ApiWrapper<ApiPage<NewsResponse>>> getAllNews(
+      @RequestParam(required = false) String search,
+      @ParameterObject @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC)
+          Pageable pageable) {
+    return ResponseEntity.ok(ApiWrapper.success(ApiPage.of(newsService.getAllNews(search, pageable))));
   }
 
   @Operation(

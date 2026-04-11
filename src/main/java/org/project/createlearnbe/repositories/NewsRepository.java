@@ -10,4 +10,6 @@ public interface NewsRepository extends JpaRepository<News, Long> {
   Optional<News> findByIsDisplayAndId(Boolean isDisplay, Long id);
 
   Page<News> findAllByIsDisplay(Boolean isDisplay, Pageable pageable);
+
+  Page<News> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 }

@@ -14,7 +14,10 @@ import org.project.createlearnbe.dto.request.ChangeStatusRegistrationRequest;
 import org.project.createlearnbe.dto.request.RegistrationRequest;
 import org.project.createlearnbe.dto.response.RegistrationResponse;
 import org.project.createlearnbe.serivce.RegistrationService;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -97,7 +100,11 @@ public class RegistrationController {
       description = "List of registrations retrieved successfully",
       content = @Content(schema = @Schema(implementation = RegistrationResponse.class)))
   @GetMapping
-  public ResponseEntity<ApiWrapper<ApiPage<RegistrationResponse>>> getAll(Pageable pageable) {
-    return ResponseEntity.ok(ApiWrapper.success(ApiPage.of(registrationService.getAll(pageable))));
+  public ResponseEntity<ApiWrapper<ApiPage<RegistrationResponse>>> getAll(
+      @RequestParam(required = false) String search,
+      @ParameterObject @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC)
+          Pageable pageable) {
+    return ResponseEntity.ok(
+        ApiWrapper.success(ApiPage.of(registrationService.getAll(search, pageable))));
   }
 }

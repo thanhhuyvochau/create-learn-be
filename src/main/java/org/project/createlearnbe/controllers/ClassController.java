@@ -40,9 +40,10 @@ public class ClassController {
       content = @Content(schema = @Schema(implementation = ApiWrapper.class)))
   @GetMapping("/admin")
   public ResponseEntity<ApiWrapper<ApiPage<ClassResponse>>> getAllByAdmin(
+      @RequestParam(required = false) String search,
       @ParameterObject @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC)
           Pageable pageable) {
-    return ResponseEntity.ok(ApiWrapper.success(clazzService.getAll(pageable)));
+    return ResponseEntity.ok(ApiWrapper.success(clazzService.getAll(search, pageable)));
   }
 
   @Operation(

@@ -13,7 +13,10 @@ import org.project.createlearnbe.config.http.ApiWrapper;
 import org.project.createlearnbe.dto.request.*;
 import org.project.createlearnbe.dto.response.AccountResponse;
 import org.project.createlearnbe.serivce.AccountService;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -112,7 +115,10 @@ public class AccountController {
       summary = "Get all accounts with pagination",
       description = "Admin can get all accounts with pagination support.")
   @GetMapping
-  public ResponseEntity<ApiWrapper<ApiPage<AccountResponse>>> getAllAccounts(Pageable pageable) {
-    return ResponseEntity.ok(ApiWrapper.success(accountService.getAllAccounts(pageable)));
+  public ResponseEntity<ApiWrapper<ApiPage<AccountResponse>>> getAllAccounts(
+      @RequestParam(required = false) String search,
+      @ParameterObject @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC)
+          Pageable pageable) {
+    return ResponseEntity.ok(ApiWrapper.success(accountService.getAllAccounts(search, pageable)));
   }
 }

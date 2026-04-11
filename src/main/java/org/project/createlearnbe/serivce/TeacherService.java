@@ -31,9 +31,12 @@ public class TeacherService {
     return teacherMapper.toDto(teacher);
   }
 
-  public ApiPage<TeacherResponseDto> getAllTeachers(Pageable pageable) {
-    Page<Teacher> teachers = teacherRepository.findAll(pageable);
-
+  public ApiPage<TeacherResponseDto> getAllTeachers(String search, Pageable pageable) {
+    Page<Teacher> teachers =
+        (search != null && !search.isBlank())
+            ? teacherRepository.findByFirstNameContainingIgnoreCaseOrLastNameContainingIgnoreCase(
+                search, search, pageable)
+            : teacherRepository.findAll(pageable);
     return ApiPage.of(teachers.map(teacherMapper::toDto));
   }
 

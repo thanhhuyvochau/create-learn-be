@@ -35,8 +35,11 @@ public class ClazzService {
   private final ScheduleMapper scheduleMapper;
   private final RegistrationService registrationService;
 
-  public ApiPage<ClassResponse> getAll(Pageable pageable) {
-    Page<Clazz> classes = clazzRepository.findAll(pageable);
+  public ApiPage<ClassResponse> getAll(String search, Pageable pageable) {
+    Page<Clazz> classes =
+        (search != null && !search.isBlank())
+            ? clazzRepository.findByNameContainingIgnoreCase(search, pageable)
+            : clazzRepository.findAll(pageable);
     return ApiPage.of(classes.map(this::toResponse));
   }
 

@@ -27,9 +27,12 @@ public class ConsultationService {
   }
 
   @Transactional(readOnly = true)
-  public ApiPage<ConsultationResponse> getAll(Pageable pageable) {
+  public ApiPage<ConsultationResponse> getAll(String search, Pageable pageable) {
     return ApiPage.of(
-        consultationRepository.findAllSortedByStatusAndCreatedAt(pageable).map(mapper::toResponse));
+        (search != null && !search.isBlank()
+                ? consultationRepository.findBySearch(search, pageable)
+                : consultationRepository.findAllSortedByStatusAndCreatedAt(pageable))
+            .map(mapper::toResponse));
   }
 
   @Transactional(readOnly = true)

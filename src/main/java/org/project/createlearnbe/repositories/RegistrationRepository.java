@@ -28,4 +28,20 @@ public interface RegistrationRepository extends JpaRepository<Registration, Long
       ORDER BY r.createdAt DESC
       """)
   Page<Registration> findByStatus(@Param("status") ProcessStatus status, Pageable pageable);
+
+  @Query(
+      """
+      SELECT r FROM Registration r
+      WHERE r.status != 'CLASS_DELETED'
+        AND (
+          LOWER(r.customerName) LIKE LOWER(CONCAT('%', :search, '%'))
+          OR LOWER(r.customerEmail) LIKE LOWER(CONCAT('%', :search, '%'))
+          OR LOWER(r.phoneNumber) LIKE LOWER(CONCAT('%', :search, '%'))
+        )
+      ORDER BY
+        CASE WHEN r.status = 'PROCESSING' THEN 0 ELSE 1 END,
+        r.status ASC,
+        r.createdAt DESC
+      """)
+  Page<Registration> findBySearch(@Param("search") String search, Pageable pageable);
 }

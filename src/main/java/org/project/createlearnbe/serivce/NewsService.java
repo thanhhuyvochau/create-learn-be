@@ -19,15 +19,17 @@ public class NewsService {
   private final NewsMapper newsMapper;
   private final UrlUtils urlUtils;
 
-  public Page<NewsResponse> getAllNews(Pageable pageable) {
-    return newsRepository
-        .findAll(pageable)
-        .map(
-            news -> {
-              NewsResponse newsResponse = newsMapper.toResponse(news);
-              newsResponse.setImage(this.urlUtils.buildAbsolutePath(news.getImage()));
-              return newsResponse;
-            });
+  public Page<NewsResponse> getAllNews(String search, Pageable pageable) {
+    Page<News> page =
+        (search != null && !search.isBlank())
+            ? newsRepository.findByTitleContainingIgnoreCase(search, pageable)
+            : newsRepository.findAll(pageable);
+    return page.map(
+        news -> {
+          NewsResponse newsResponse = newsMapper.toResponse(news);
+          newsResponse.setImage(this.urlUtils.buildAbsolutePath(news.getImage()));
+          return newsResponse;
+        });
   }
 
   public NewsResponse getNewsById(Long id) {

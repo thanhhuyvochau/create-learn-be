@@ -11,6 +11,8 @@ import org.springframework.data.repository.query.Param;
 public interface ClazzRepository extends JpaRepository<Clazz, Long> {
   Optional<Clazz> findClazzByIsDisplayedAndId(Boolean isDisplayed, Long id);
 
+  Page<Clazz> findByNameContainingIgnoreCase(String name, Pageable pageable);
+
   @Query(
       """
           SELECT c FROM Clazz c

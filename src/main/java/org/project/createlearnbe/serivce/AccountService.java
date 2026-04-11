@@ -143,8 +143,11 @@ public class AccountService {
     return "Account updated successfully";
   }
 
-  public ApiPage<AccountResponse> getAllAccounts(Pageable pageable) {
-    Page<Account> accounts = accountRepository.findAll(pageable);
+  public ApiPage<AccountResponse> getAllAccounts(String search, Pageable pageable) {
+    Page<Account> accounts =
+        (search != null && !search.isBlank())
+            ? accountRepository.findBySearch(search, pageable)
+            : accountRepository.findAll(pageable);
     return new ApiPage<>(accounts.map(accountMapper::toResponse));
   }
 }
