@@ -20,8 +20,10 @@ public class SubjectService {
   private final SubjectRepository subjectRepository;
   private final SubjectMapper subjectMapper;
 
-  public ApiPage<SubjectResponse> getAll(Pageable pageable) {
-    Page<Subject> subjects = subjectRepository.findAll(pageable);
+  public ApiPage<SubjectResponse> getAll(String search, Pageable pageable) {
+    Page<Subject> subjects = (search == null || search.isBlank())
+        ? subjectRepository.findAll(pageable)
+        : subjectRepository.findByNameContainingIgnoreCase(search, pageable);
     return ApiPage.of(subjects.map(subjectMapper::toResponse));
   }
 

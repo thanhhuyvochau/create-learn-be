@@ -19,9 +19,10 @@ public class GradeService {
   private final GradeRepository gradeRepository;
   private final GradeMapper gradeMapper;
 
-  public ApiPage<GradeResponse> getAll(Pageable pageable) {
-    Page<Grade> grades = gradeRepository.findAll(pageable);
-
+  public ApiPage<GradeResponse> getAll(String search, Pageable pageable) {
+    Page<Grade> grades = (search == null || search.isBlank())
+        ? gradeRepository.findAll(pageable)
+        : gradeRepository.findByNameContainingIgnoreCase(search, pageable);
     return ApiPage.of(grades.map(gradeMapper::toResponse));
   }
 
