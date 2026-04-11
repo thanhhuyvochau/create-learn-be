@@ -1,10 +1,13 @@
 package org.project.createlearnbe.repositories;
 
 import org.project.createlearnbe.entities.Grade;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GradeRepository extends JpaRepository<Grade, Long> {
   boolean existsByName(String name);
+  Page<Grade> findByNameContainingIgnoreCase(String name, Pageable pageable);
 }
