@@ -12,7 +12,10 @@ import org.project.createlearnbe.config.http.ApiWrapper;
 import org.project.createlearnbe.dto.request.SubjectRequest;
 import org.project.createlearnbe.dto.response.SubjectResponse;
 import org.project.createlearnbe.serivce.SubjectService;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +38,11 @@ public class SubjectController {
       description = "List of subjects retrieved successfully",
       content = @Content(schema = @Schema(implementation = SubjectResponse.class)))
   @GetMapping
-  public ResponseEntity<ApiWrapper<ApiPage<SubjectResponse>>> getAllSubjects(Pageable pageable) {
-    return ResponseEntity.ok(ApiWrapper.success(subjectService.getAll(pageable)));
+  public ResponseEntity<ApiWrapper<ApiPage<SubjectResponse>>> getAllSubjects(
+      @RequestParam(required = false) String search,
+      @ParameterObject @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC)
+          Pageable pageable) {
+    return ResponseEntity.ok(ApiWrapper.success(subjectService.getAll(search, pageable)));
   }
 
   @Operation(

@@ -36,9 +36,10 @@ public class GradeController {
       content = @Content(schema = @Schema(implementation = GradeResponse.class)))
   @GetMapping
   public ResponseEntity<ApiWrapper<ApiPage<GradeResponse>>> getAllGrades(
+      @RequestParam(required = false) String search,
       @ParameterObject @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC)
           Pageable pageable) {
-    return ResponseEntity.ok(ApiWrapper.success(gradeService.getAll(pageable)));
+    return ResponseEntity.ok(ApiWrapper.success(gradeService.getAll(search, pageable)));
   }
 
   @Operation(
