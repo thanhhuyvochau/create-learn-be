@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:mysql://mysql:3306/create-learn-db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: developer
-    password: 123456789
+    password: Z28S8hE03FB
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
